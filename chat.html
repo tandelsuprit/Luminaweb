@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skincare Assistant - Lumina Care</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="16" r="14" fill="url(#gradient)" opacity="0.2"/>
+                        <path d="M16 8C11.58 8 8 11.58 8 16C8 20.42 11.58 24 16 24C20.42 24 24 20.42 24 16C24 11.58 20.42 8 16 8ZM16 22C12.69 22 10 19.31 10 16C10 12.69 12.69 10 16 10C19.31 10 22 12.69 22 16C22 19.31 19.31 22 16 22Z" fill="url(#gradient)"/>
+                        <circle cx="16" cy="14" r="2" fill="url(#gradient)"/>
+                        <circle cx="12" cy="18" r="1.5" fill="url(#gradient)"/>
+                        <circle cx="20" cy="18" r="1.5" fill="url(#gradient)"/>
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="logo-text">Lumina Care</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="chat.html" class="nav-link active">Skincare Assistant</a>
+                    <a href="#about" class="nav-link">About</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="chat-page">
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-header-content">
+                    <div class="bot-avatar">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <circle cx="20" cy="20" r="18" fill="url(#chatGradient)" opacity="0.2"/>
+                            <circle cx="20" cy="20" r="12" fill="url(#chatGradient)"/>
+                            <circle cx="16" cy="18" r="2" fill="white"/>
+                            <circle cx="24" cy="18" r="2" fill="white"/>
+                            <path d="M15 24C15 24 17 26 20 26C23 26 25 24 25 24" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="chatGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#667eea"/>
+                                    <stop offset="100%" style="stop-color:#764ba2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2>Lumina Assistant</h2>
+                        <p class="status">
+                            <span class="status-dot"></span>
+                            Online
+                        </p>
+                    </div>
+                </div>
+                <button class="btn-icon-only" title="Clear chat" onclick="clearChat()">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M8 3V5H16V3H8ZM4 6V16C4 17.1 4.9 18 6 18H14C15.1 18 16 17.1 16 16V6H4ZM7 8H9V15H7V8ZM11 8H13V15H11V8Z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">
+                    <div class="message-avatar">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                            <circle cx="16" cy="16" r="14" fill="url(#botGrad)" opacity="0.2"/>
+                            <circle cx="16" cy="16" r="10" fill="url(#botGrad)"/>
+                            <circle cx="13" cy="15" r="1.5" fill="white"/>
+                            <circle cx="19" cy="15" r="1.5" fill="white"/>
+                            <path d="M12 19C12 19 14 21 16 21C18 21 20 19 20 19" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="botGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#667eea"/>
+                                    <stop offset="100%" style="stop-color:#764ba2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>Hello! 👋 I'm your personal skincare assistant. I'm here to help answer any questions about skincare, routines, products, or skin concerns.</p>
+                            <p style="margin-top: 12px;">How can I assist you today?</p>
+                        </div>
+                        <span class="message-time">Just now</span>
+                    </div>
+                </div>
+
+                <div class="quick-questions">
+                    <h4>Quick Questions:</h4>
+                    <div class="quick-questions-grid">
+                        <button class="quick-question-btn" onclick="sendQuickMessage('What products should I use for acne?')">
+                            What products should I use for acne?
+                        </button>
+                        <button class="quick-question-btn" onclick="sendQuickMessage('How can I reduce dark circles?')">
+                            How can I reduce dark circles?
+                        </button>
+                        <button class="quick-question-btn" onclick="sendQuickMessage('Best ingredients for anti-aging?')">
+                            Best ingredients for anti-aging?
+                        </button>
+                        <button class="quick-question-btn" onclick="sendQuickMessage('How often should I exfoliate?')">
+                            How often should I exfoliate?
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <button class="btn-icon-only" title="Attach file">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M16.5 6H11L9 4H4C3.45 4 3 4.45 3 5V15C3 15.55 3.45 16 4 16H16.5C17.05 16 17.5 15.55 17.5 15V7C17.5 6.45 17.05 6 16.5 6Z"/>
+                        </svg>
+                    </button>
+                    <input 
+                        type="text" 
+                        id="chatInput" 
+                        placeholder="Type your skincare question..." 
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button class="btn-send" onclick="sendMessage()">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M2 10L18 2L10 18L8 11L2 10Z"/>
+                        </svg>
+                    </button>
+                </div>
+                <p class="chat-disclaimer">AI responses are for informational purposes only. Consult a dermatologist for medical advice.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let messageCount = 0;
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addUserMessage(message);
+                input.value = '';
+                
+                setTimeout(() => {
+                    addBotResponse(message);
+                }, 1000);
+            }
+        }
+
+        function sendQuickMessage(message) {
+            addUserMessage(message);
+            
+            setTimeout(() => {
+                addBotResponse(message);
+            }, 1000);
+        }
+
+        function addUserMessage(message) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const quickQuestions = document.querySelector('.quick-questions');
+            
+            if (quickQuestions) {
+                quickQuestions.remove();
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message';
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <div class="message-bubble">
+                        <p>${escapeHtml(message)}</p>
+                    </div>
+                    <span class="message-time">${getCurrentTime()}</span>
+                </div>
+                <div class="message-avatar user-avatar">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="16" r="14" fill="url(#userGrad)"/>
+                        <circle cx="16" cy="12" r="4" fill="white"/>
+                        <path d="M8 24C8 20 11 18 16 18C21 18 24 20 24 24" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <defs>
+                            <linearGradient id="userGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addBotResponse(userMessage) {
+            const messagesContainer = document.getElementById('chatMessages');
+            
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot-message typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="16" r="14" fill="url(#botGrad${messageCount})" opacity="0.2"/>
+                        <circle cx="16" cy="16" r="10" fill="url(#botGrad${messageCount})"/>
+                        <circle cx="13" cy="15" r="1.5" fill="white"/>
+                        <circle cx="19" cy="15" r="1.5" fill="white"/>
+                        <path d="M12 19C12 19 14 21 16 21C18 21 20 19 20 19" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                        <defs>
+                            <linearGradient id="botGrad${messageCount}" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="message-content">
+                    <div class="message-bubble">
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(typingDiv);
+            scrollToBottom();
+            
+            setTimeout(() => {
+                typingDiv.remove();
+                
+                const response = generateResponse(userMessage);
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot-message';
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                            <circle cx="16" cy="16" r="14" fill="url(#botGrad${messageCount}a)" opacity="0.2"/>
+                            <circle cx="16" cy="16" r="10" fill="url(#botGrad${messageCount}a)"/>
+                            <circle cx="13" cy="15" r="1.5" fill="white"/>
+                            <circle cx="19" cy="15" r="1.5" fill="white"/>
+                            <path d="M12 19C12 19 14 21 16 21C18 21 20 19 20 19" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="botGrad${messageCount}a" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#667eea"/>
+                                    <stop offset="100%" style="stop-color:#764ba2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            ${response}
+                        </div>
+                        <span class="message-time">${getCurrentTime()}</span>
+                    </div>
+                `;
+                
+                messagesContainer.appendChild(messageDiv);
+                scrollToBottom();
+                messageCount++;
+            }, 1500);
+        }
+
+        function generateResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('acne') || lowerMessage.includes('pimple') || lowerMessage.includes('breakout')) {
+                return `
+                    <p>For acne-prone skin, I recommend:</p>
+                    <ul>
+                        <li><strong>Salicylic Acid (BHA):</strong> Helps unclog pores and reduce inflammation</li>
+                        <li><strong>Benzoyl Peroxide:</strong> Kills acne-causing bacteria</li>
+                        <li><strong>Niacinamide:</strong> Reduces oil production and inflammation</li>
+                        <li><strong>Gentle cleanser:</strong> Avoid harsh scrubs that can worsen acne</li>
+                    </ul>
+                    <p>Remember to be consistent with your routine and avoid touching your face. If acne persists, consult a dermatologist.</p>
+                `;
+            } else if (lowerMessage.includes('dark circle') || lowerMessage.includes('under eye')) {
+                return `
+                    <p>To reduce dark circles, try these approaches:</p>
+                    <ul>
+                        <li><strong>Caffeine-based eye creams:</strong> Help constrict blood vessels</li>
+                        <li><strong>Vitamin C:</strong> Brightens under-eye area</li>
+                        <li><strong>Retinol:</strong> Increases collagen production (use at night)</li>
+                        <li><strong>Cold compress:</strong> Reduces puffiness</li>
+                        <li><strong>Get adequate sleep:</strong> 7-8 hours nightly</li>
+                    </ul>
+                    <p>Stay hydrated and consider allergies as a potential cause.</p>
+                `;
+            } else if (lowerMessage.includes('aging') || lowerMessage.includes('wrinkle') || lowerMessage.includes('fine line')) {
+                return `
+                    <p>Best anti-aging ingredients include:</p>
+                    <ul>
+                        <li><strong>Retinoids (Retinol):</strong> Gold standard for anti-aging</li>
+                        <li><strong>Vitamin C:</strong> Antioxidant that boosts collagen</li>
+                        <li><strong>Peptides:</strong> Support collagen production</li>
+                        <li><strong>Hyaluronic Acid:</strong> Intense hydration</li>
+                        <li><strong>Sunscreen SPF 30+:</strong> Most important anti-aging product!</li>
+                    </ul>
+                    <p>Start slowly with retinoids and always use sunscreen during the day.</p>
+                `;
+            } else if (lowerMessage.includes('exfoliat')) {
+                return `
+                    <p>Exfoliation frequency depends on your skin type:</p>
+                    <ul>
+                        <li><strong>Oily skin:</strong> 2-3 times per week</li>
+                        <li><strong>Normal/Combination:</strong> 2 times per week</li>
+                        <li><strong>Dry/Sensitive:</strong> 1 time per week</li>
+                    </ul>
+                    <p>Chemical exfoliants (AHA/BHA) are gentler than physical scrubs. Always follow with moisturizer and sunscreen.</p>
+                `;
+            } else if (lowerMessage.includes('dry skin') || lowerMessage.includes('moisture') || lowerMessage.includes('hydrat')) {
+                return `
+                    <p>For dry skin, focus on hydration:</p>
+                    <ul>
+                        <li><strong>Hyaluronic Acid:</strong> Draws moisture into skin</li>
+                        <li><strong>Ceramides:</strong> Repair skin barrier</li>
+                        <li><strong>Rich moisturizer:</strong> Look for cream-based formulas</li>
+                        <li><strong>Face oil:</strong> Seal in moisture at night</li>
+                        <li><strong>Avoid hot water:</strong> Use lukewarm water for cleansing</li>
+                    </ul>
+                    <p>Drink plenty of water and use a humidifier in dry climates.</p>
+                `;
+            } else if (lowerMessage.includes('oily skin') || lowerMessage.includes('shine') || lowerMessage.includes('grease')) {
+                return `
+                    <p>For oily skin management:</p>
+                    <ul>
+                        <li><strong>Gel-based cleanser:</strong> Remove excess oil without stripping</li>
+                        <li><strong>Salicylic Acid:</strong> Controls oil and unclogs pores</li>
+                        <li><strong>Niacinamide:</strong> Regulates sebum production</li>
+                        <li><strong>Oil-free moisturizer:</strong> Yes, oily skin still needs moisture!</li>
+                        <li><strong>Clay masks:</strong> 1-2x weekly to absorb excess oil</li>
+                    </ul>
+                    <p>Don't over-cleanse, as this can cause more oil production.</p>
+                `;
+            } else {
+                return `
+                    <p>Thank you for your question! For personalized skincare advice, I recommend:</p>
+                    <ul>
+                        <li>Upload your photo for a detailed skin analysis</li>
+                        <li>Follow a consistent morning and evening routine</li>
+                        <li>Always use sunscreen during the day</li>
+                        <li>Stay hydrated and maintain a healthy diet</li>
+                    </ul>
+                    <p>Is there a specific skin concern you'd like to discuss?</p>
+                `;
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function clearChat() {
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = `
+                <div class="message bot-message">
+                    <div class="message-avatar">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                            <circle cx="16" cy="16" r="14" fill="url(#botGrad)" opacity="0.2"/>
+                            <circle cx="16" cy="16" r="10" fill="url(#botGrad)"/>
+                            <circle cx="13" cy="15" r="1.5" fill="white"/>
+                            <circle cx="19" cy="15" r="1.5" fill="white"/>
+                            <path d="M12 19C12 19 14 21 16 21C18 21 20 19 20 19" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="botGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#667eea"/>
+                                    <stop offset="100%" style="stop-color:#764ba2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>Chat cleared! How can I help you today?</p>
+                        </div>
+                        <span class="message-time">${getCurrentTime()}</span>
+                    </div>
+                </div>
+            `;
+            messageCount = 0;
+        }
+    </script>
+</body>
+</html>

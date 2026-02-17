@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina Care - AI Powered Face Analysis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="16" r="14" fill="url(#gradient)" opacity="0.2"/>
+                        <path d="M16 8C11.58 8 8 11.58 8 16C8 20.42 11.58 24 16 24C20.42 24 24 20.42 24 16C24 11.58 20.42 8 16 8ZM16 22C12.69 22 10 19.31 10 16C10 12.69 12.69 10 16 10C19.31 10 22 12.69 22 16C22 19.31 19.31 22 16 22Z" fill="url(#gradient)"/>
+                        <circle cx="16" cy="14" r="2" fill="url(#gradient)"/>
+                        <circle cx="12" cy="18" r="1.5" fill="url(#gradient)"/>
+                        <circle cx="20" cy="18" r="1.5" fill="url(#gradient)"/>
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="logo-text">Lumina Care</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="chat.html" class="nav-link">Skincare Assistant</a>
+                    <a href="result.html" class="nav-link">Sample Results</a>
+                    <a href="auth.html" class="nav-link">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="badge">
+                        <span class="badge-icon">✨</span>
+                        <span>AI-Powered Skincare Analysis</span>
+                    </div>
+                    <h1 class="hero-title">
+                        Advanced Facial Analysis for
+                        <span class="gradient-text">Personalized Skincare</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Upload your photo and let our AI analyze your skin type, detect concerns, and provide personalized skincare recommendations in seconds.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 2C5.58 2 2 5.58 2 10C2 14.42 5.58 18 10 18C14.42 18 18 14.42 18 10C18 5.58 14.42 2 10 2ZM8 14L4 10L5.41 8.59L8 11.17L14.59 4.58L16 6L8 14Z"/>
+                            </svg>
+                            <span>Instant Analysis</span>
+                        </div>
+                        <div class="feature-item">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 2C5.58 2 2 5.58 2 10C2 14.42 5.58 18 10 18C14.42 18 18 14.42 18 10C18 5.58 14.42 2 10 2ZM8 14L4 10L5.41 8.59L8 11.17L14.59 4.58L16 6L8 14Z"/>
+                            </svg>
+                            <span>Multi-Factor Detection</span>
+                        </div>
+                        <div class="feature-item">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 2C5.58 2 2 5.58 2 10C2 14.42 5.58 18 10 18C14.42 18 18 14.42 18 10C18 5.58 14.42 2 10 2ZM8 14L4 10L5.41 8.59L8 11.17L14.59 4.58L16 6L8 14Z"/>
+                            </svg>
+                            <span>Expert Recommendations</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="upload-section">
+                    <div class="upload-card">
+                        <div class="upload-header">
+                            <h2>Upload Your Photo</h2>
+                            <p>Get your personalized skincare analysis</p>
+                        </div>
+                        
+                        <div class="upload-area" id="uploadArea">
+                            <input type="file" id="fileInput" accept="image/*" hidden>
+                            <div class="upload-content" id="uploadContent">
+                                <div class="upload-icon">
+                                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                                        <rect width="64" height="64" rx="32" fill="url(#uploadGradient)" opacity="0.1"/>
+                                        <path d="M32 20V44M20 32H44" stroke="url(#uploadGradient)" stroke-width="3" stroke-linecap="round"/>
+                                        <defs>
+                                            <linearGradient id="uploadGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" style="stop-color:#667eea"/>
+                                                <stop offset="100%" style="stop-color:#764ba2"/>
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                </div>
+                                <h3>Click to upload or drag and drop</h3>
+                                <p>PNG, JPG or JPEG (MAX. 10MB)</p>
+                            </div>
+                            <div class="preview-content" id="previewContent" style="display: none;">
+                                <img id="previewImage" src="" alt="Preview">
+                                <div class="preview-overlay">
+                                    <button class="btn-change" id="changeBtn">Change Photo</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn-primary" id="analyzeBtn" disabled>
+                            <span class="btn-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10 2C5.58 2 2 5.58 2 10C2 14.42 5.58 18 10 18C14.42 18 18 14.42 18 10C18 5.58 14.42 2 10 2ZM10 16C6.69 16 4 13.31 4 10C4 6.69 6.69 4 10 4C13.31 4 16 6.69 16 10C16 13.31 13.31 16 10 16Z"/>
+                                </svg>
+                            </span>
+                            Analyze Face
+                        </button>
+
+                        <div class="upload-info">
+                            <p>💡 For best results, use a clear, well-lit photo of your face</p>
+                            <p style="margin-top: 8px; font-size: 13px;">
+                                <a href="result.html" style="color: #667eea; text-decoration: none;">👁️ Preview Sample Results Page</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>What We Analyze</h2>
+                    <p>Comprehensive skin analysis powered by advanced AI technology</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <circle cx="20" cy="20" r="18" fill="url(#grad1)" opacity="0.1"/>
+                                <circle cx="20" cy="20" r="12" stroke="url(#grad1)" stroke-width="2"/>
+                                <defs>
+                                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#667eea"/>
+                                        <stop offset="100%" style="stop-color:#764ba2"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h3>Skin Type</h3>
+                        <p>Identify whether your skin is oily, dry, normal, combination, or sensitive</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <circle cx="20" cy="20" r="18" fill="url(#grad2)" opacity="0.1"/>
+                                <circle cx="15" cy="15" r="3" fill="url(#grad2)"/>
+                                <circle cx="25" cy="18" r="2" fill="url(#grad2)"/>
+                                <circle cx="18" cy="25" r="2.5" fill="url(#grad2)"/>
+                                <defs>
+                                    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#f093fb"/>
+                                        <stop offset="100%" style="stop-color:#f5576c"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h3>Acne Detection</h3>
+                        <p>Detect acne severity and get targeted treatment recommendations</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <circle cx="20" cy="20" r="18" fill="url(#grad3)" opacity="0.1"/>
+                                <circle cx="14" cy="20" r="4" stroke="url(#grad3)" stroke-width="2"/>
+                                <circle cx="26" cy="20" r="4" stroke="url(#grad3)" stroke-width="2"/>
+                                <defs>
+                                    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#4facfe"/>
+                                        <stop offset="100%" style="stop-color:#00f2fe"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h3>Dark Circles</h3>
+                        <p>Analyze under-eye darkness and receive specialized care solutions</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <circle cx="20" cy="20" r="18" fill="url(#grad4)" opacity="0.1"/>
+                                <path d="M12 20C12 20 15 15 20 15C25 15 28 20 28 20" stroke="url(#grad4)" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M12 24C12 24 15 28 20 28C25 28 28 24 28 24" stroke="url(#grad4)" stroke-width="2" stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#fa709a"/>
+                                        <stop offset="100%" style="stop-color:#fee140"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h3>Pigmentation</h3>
+                        <p>Detect skin discoloration and hyperpigmentation issues</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <circle cx="20" cy="20" r="18" fill="url(#grad5)" opacity="0.1"/>
+                                <path d="M10 15C10 15 15 12 20 12C25 12 30 15 30 15M10 20C10 20 15 17 20 17C25 17 30 20 30 20M10 25C10 25 15 22 20 22C25 22 30 25 30 25" stroke="url(#grad5)" stroke-width="2" stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="grad5" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#30cfd0"/>
+                                        <stop offset="100%" style="stop-color:#330867"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h3>Wrinkles</h3>
+                        <p>Assess fine lines and wrinkles with anti-aging recommendations</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <circle cx="20" cy="20" r="18" fill="url(#grad6)" opacity="0.1"/>
+                                <path d="M20 10V30M10 20H30" stroke="url(#grad6)" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="20" cy="20" r="8" stroke="url(#grad6)" stroke-width="2"/>
+                                <defs>
+                                    <linearGradient id="grad6" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#a8edea"/>
+                                        <stop offset="100%" style="stop-color:#fed6e3"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h3>Personalized Care</h3>
+                        <p>Get customized skincare routines based on your unique skin profile</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works">
+            <div class="container">
+                <div class="section-header">
+                    <h2>How It Works</h2>
+                    <p>Three simple steps to healthier skin</p>
+                </div>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">01</div>
+                        <h3>Upload Photo</h3>
+                        <p>Take or upload a clear photo of your face in good lighting</p>
+                    </div>
+                    <div class="step-arrow">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M10 20H30M30 20L23 13M30 20L23 27" stroke="url(#arrowGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs>
+                                <linearGradient id="arrowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#667eea"/>
+                                    <stop offset="100%" style="stop-color:#764ba2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">02</div>
+                        <h3>AI Analysis</h3>
+                        <p>Our AI analyzes your skin across multiple parameters instantly</p>
+                    </div>
+                    <div class="step-arrow">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M10 20H30M30 20L23 13M30 20L23 27" stroke="url(#arrowGrad2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs>
+                                <linearGradient id="arrowGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#667eea"/>
+                                    <stop offset="100%" style="stop-color:#764ba2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">03</div>
+                        <h3>Get Recommendations</h3>
+                        <p>Receive personalized skincare routine and product suggestions</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                            <circle cx="16" cy="16" r="14" fill="url(#footerGradient)" opacity="0.2"/>
+                            <path d="M16 8C11.58 8 8 11.58 8 16C8 20.42 11.58 24 16 24C20.42 24 24 20.42 24 16C24 11.58 20.42 8 16 8ZM16 22C12.69 22 10 19.31 10 16C10 12.69 12.69 10 16 10C19.31 10 22 12.69 22 16C22 19.31 19.31 22 16 22Z" fill="url(#footerGradient)"/>
+                            <defs>
+                                <linearGradient id="footerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#667eea"/>
+                                    <stop offset="100%" style="stop-color:#764ba2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span>Lumina Care</span>
+                    </div>
+                    <p>AI-powered skincare analysis for personalized beauty solutions.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <a href="#">Features</a>
+                    <a href="#">How it works</a>
+                    <a href="#">Pricing</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Lumina Care. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const uploadContent = document.getElementById('uploadContent');
+        const previewContent = document.getElementById('previewContent');
+        const previewImage = document.getElementById('previewImage');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const changeBtn = document.getElementById('changeBtn');
+
+        uploadArea.addEventListener('click', () => {
+            if (uploadContent.style.display !== 'none') {
+                fileInput.click();
+            }
+        });
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#667eea';
+            uploadArea.style.backgroundColor = 'rgba(102, 126, 234, 0.05)';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = '#e2e8f0';
+            uploadArea.style.backgroundColor = '#f8fafc';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#e2e8f0';
+            uploadArea.style.backgroundColor = '#f8fafc';
+            
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                handleFile(file);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        });
+
+        changeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fileInput.click();
+        });
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                uploadContent.style.display = 'none';
+                previewContent.style.display = 'block';
+                analyzeBtn.disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        analyzeBtn.addEventListener('click', () => {
+            analyzeBtn.innerHTML = '<span class="spinner"></span>Analyzing...';
+            analyzeBtn.disabled = true;
+            
+            setTimeout(() => {
+                alert('⚠️ Backend Not Connected\n\nThe AI analysis feature will be available once the machine learning model is integrated by the backend team.\n\nFor now, you can view the sample results page to see how the analysis will be displayed.');
+                
+                analyzeBtn.innerHTML = '<span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2C5.58 2 2 5.58 2 10C2 14.42 5.58 18 10 18C14.42 18 18 14.42 18 10C18 5.58 14.42 2 10 2ZM10 16C6.69 16 4 13.31 4 10C4 6.69 6.69 4 10 4C13.31 4 16 6.69 16 10C16 13.31 13.31 16 10 16Z"/></svg></span>Analyze Face';
+                analyzeBtn.disabled = false;
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
