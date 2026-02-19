@@ -31,7 +31,6 @@
                     <a href="chat.html" class="nav-link">Skincare Assistant</a>
                     <a href="result.html" class="nav-link">Sample Results</a>
                     <a href="auth.html" class="nav-link">Sign In</a>
-                    <a href="profile.html" class="nav-link">Profile</a>
                 </div>
             </div>
         </div>
@@ -80,7 +79,7 @@
                             <h2>Upload Your Photo</h2>
                             <p>Get your personalized skincare analysis</p>
                         </div>
-                        
+                       
                         <div class="upload-area" id="uploadArea">
                             <input type="file" id="fileInput" accept="image/*" hidden>
                             <div class="upload-content" id="uploadContent">
@@ -361,7 +360,7 @@
             e.preventDefault();
             uploadArea.style.borderColor = '#e2e8f0';
             uploadArea.style.backgroundColor = '#f8fafc';
-            
+           
             const file = e.dataTransfer.files[0];
             if (file && file.type.startsWith('image/')) {
                 handleFile(file);
@@ -394,22 +393,14 @@
         analyzeBtn.addEventListener('click', () => {
             analyzeBtn.innerHTML = '<span class="spinner"></span>Analyzing...';
             analyzeBtn.disabled = true;
-            
+           
             setTimeout(() => {
                 alert('⚠️ Backend Not Connected\n\nThe AI analysis feature will be available once the machine learning model is integrated by the backend team.\n\nFor now, you can view the sample results page to see how the analysis will be displayed.');
-                
+               
                 analyzeBtn.innerHTML = '<span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2C5.58 2 2 5.58 2 10C2 14.42 5.58 18 10 18C14.42 18 18 14.42 18 10C18 5.58 14.42 2 10 2ZM10 16C6.69 16 4 13.31 4 10C4 6.69 6.69 4 10 4C13.31 4 16 6.69 16 10C16 13.31 13.31 16 10 16Z"/></svg></span>Analyze Face';
                 analyzeBtn.disabled = false;
             }, 2000);
         });
     </script>
 </body>
-<script>
-if (localStorage.getItem("loggedIn") !== "true") {
-  window.location.href = "auth.html";
-}
-if (!localStorage.getItem("luminaUser")) {
-    window.location.href = "auth.html";
-}
-</script>
 </html>

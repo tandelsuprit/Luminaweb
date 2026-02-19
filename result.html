@@ -35,7 +35,6 @@
                     <a href="index.html" class="nav-link">Home</a>
                     <a href="chat.html" class="nav-link">Skincare Assistant</a>
                     <a href="result.html" class="nav-link active">Sample Results</a>
-                    <a href="profile.html" class="nav-link">Profile</a>
                 </div>
             </div>
         </div>
@@ -524,20 +523,14 @@
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const targetTab = btn.getAttribute('data-tab');
-                
+               
                 tabBtns.forEach(b => b.classList.remove('active'));
                 tabPanels.forEach(p => p.classList.remove('active'));
-                
+               
                 btn.classList.add('active');
                 document.getElementById(targetTab).classList.add('active');
             });
         });
     </script>
 </body>
-<script>
-if (localStorage.getItem("loggedIn") !== "true") {
-  window.location.href = "auth.html";
-}
-</script>
-
 </html>
