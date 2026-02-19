@@ -223,100 +223,65 @@
     </main>
 
     <script>
-        function showSignIn() {
-            document.getElementById('signInForm').style.display = 'block';
-            document.getElementById('signUpForm').style.display = 'none';
-        }
+/* Get form elements */
+const signupForm = document.getElementById("signupForm");
+const loginForm = document.getElementById("loginForm");
 
-        function showSignUp() {
-            document.getElementById('signInForm').style.display = 'none';
-            document.getElementById('signUpForm').style.display = 'block';
-        }
+/* SIGN UP */
+if (signupForm) {
+  signupForm.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-        function handleSignIn() {
-            const email = document.getElementById('signInEmail').value.trim();
-            const password = document.getElementById('signInPassword').value.trim();
+    const name = document.getElementById("signupName").value;
+    const email = document.getElementById("signupEmail").value;
+    const password = document.getElementById("signupPassword").value;
 
-            if (!email || !password) {
-                showToast('⚠️ Please enter your email and password.', 'warning');
-                return;
-            }
+    if (!name || !email || !password) {
+      alert("Please fill all fields");
+      return;
+    }
 
-            const btn = document.getElementById('signInBtn');
-            btn.innerHTML = '<span class="spinner"></span> Signing In...';
-            btn.disabled = true;
+    const user = {
+      name,
+      email,
+      password
+    };
 
-            setTimeout(() => {
-                showToast('✅ Sign In Successful! Redirecting...', 'success');
-                setTimeout(() => {
-                    window.location.href = 'home.html';
-                }, 1500);
-            }, 1500);
-        }
+    localStorage.setItem("luminaUser", JSON.stringify(user));
+    alert("Signup Successful!");
 
-        function handleSignUp() {
-            const name = document.getElementById('signUpName').value.trim();
-            const email = document.getElementById('signUpEmail').value.trim();
-            const password = document.getElementById('signUpPassword').value.trim();
-            const confirm = document.getElementById('signUpConfirm').value.trim();
-            const agreed = document.getElementById('agreeTerms').checked;
+    window.location.href = "home.html";
+  });
+}
 
-            if (!name || !email || !password || !confirm) {
-                showToast('⚠️ Please fill in all fields.', 'warning');
-                return;
-            }
+/* LOGIN */
+if (loginForm) {
+  loginForm.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-            if (password.length < 8) {
-                showToast('⚠️ Password must be at least 8 characters.', 'warning');
-                return;
-            }
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
 
-            if (password !== confirm) {
-                showToast('❌ Passwords do not match!', 'error');
-                return;
-            }
+    const savedUser = JSON.parse(localStorage.getItem("luminaUser"));
 
-            if (!agreed) {
-                showToast('⚠️ Please agree to the Terms & Conditions.', 'warning');
-                return;
-            }
+    if (!savedUser) {
+      alert("No user found. Please Sign Up first.");
+      return;
+    }
 
-            showToast('✅ Account Created! Redirecting...', 'success');
-            setTimeout(() => {
-                window.location.href = 'home.html';
-            }, 1500);
-        }
+    if (
+      email === savedUser.email &&
+      password === savedUser.password
+    ) {
+      alert("Login Successful!");
+      localStorage.setItem("loggedIn", "true");
+      window.location.href = "home.html";
+    } else {
+      alert("Invalid email or password");
+    }
+  });
+}
+</script>
 
-        function handleGoogleSignIn() {
-            showToast('⚠️ Google Sign-In requires backend integration.', 'warning');
-        }
-
-        function showToast(message, type) {
-            const existing = document.querySelector('.toast');
-            if (existing) existing.remove();
-
-            const toast = document.createElement('div');
-            toast.className = 'toast toast-' + type;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-
-            setTimeout(() => toast.classList.add('toast-show'), 10);
-            setTimeout(() => {
-                toast.classList.remove('toast-show');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const signInVisible = document.getElementById('signInForm').style.display !== 'none';
-                if (signInVisible) {
-                    handleSignIn();
-                } else {
-                    handleSignUp();
-                }
-            }
-        });
-    </script>
 </body>
 </html>

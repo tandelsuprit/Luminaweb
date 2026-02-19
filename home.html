@@ -31,6 +31,7 @@
                     <a href="chat.html" class="nav-link">Skincare Assistant</a>
                     <a href="result.html" class="nav-link">Sample Results</a>
                     <a href="auth.html" class="nav-link">Sign In</a>
+                    <a href="profile.html" class="nav-link">Profile</a>
                 </div>
             </div>
         </div>
@@ -403,4 +404,12 @@
         });
     </script>
 </body>
+<script>
+if (localStorage.getItem("loggedIn") !== "true") {
+  window.location.href = "auth.html";
+}
+if (!localStorage.getItem("luminaUser")) {
+    window.location.href = "auth.html";
+}
+</script>
 </html>
