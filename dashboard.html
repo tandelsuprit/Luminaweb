@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Lumina Care</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Dashboard specific styles */
+        .dashboard-page {
+            padding: 40px 0 80px;
+            min-height: calc(100vh - 65px);
+        }
+
+        .dashboard-header {
+            margin-bottom: 40px;
+        }
+
+        .welcome-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .welcome-text h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .welcome-text p {
+            color: var(--text-secondary);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.analysis { background: rgba(102,126,234,0.1); color: #667eea; }
+        .stat-icon.improvement { background: rgba(16,185,129,0.1); color: #10b981; }
+        .stat-icon.streak { background: rgba(250,112,154,0.1); color: #fa709a; }
+        .stat-icon.member { background: rgba(79,172,254,0.1); color: #4facfe; }
+
+        .stat-info h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-info p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 968px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .dashboard-card {
+            background: var(--surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .card-header a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .card-header a:hover {
+            text-decoration: underline;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Recent Analyses */
+        .analysis-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .analysis-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 12px;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+
+        .analysis-item:hover {
+            background: #f1f5f9;
+        }
+
+        .analysis-thumb {
+            width: 64px;
+            height: 64px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: var(--border);
+        }
+
+        .analysis-info {
+            flex: 1;
+        }
+
+        .analysis-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .analysis-info p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .analysis-score {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .score-badge.high { background: rgba(16,185,129,0.1); color: #10b981; }
+        .score-badge.medium { background: rgba(245,158,11,0.1); color: #f59e0b; }
+        .score-badge.low { background: rgba(239,68,68,0.1); color: #ef4444; }
+
+        /* Skin Profile */
+        .skin-type-display {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .skin-type-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 36px;
+            color: white;
+        }
+
+        .skin-type-display h4 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .skin-type-display p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .skin-concerns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .concern-tag {
+            padding: 6px 14px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .concern-tag.active {
+            background: rgba(102,126,234,0.1);
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        /* Tips Section */
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .tip-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(102,126,234,0.1);
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+
+        .tip-item p {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .btn-new-analysis {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--primary-gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .btn-new-analysis:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="16" r="14" fill="url(#gradient)" opacity="0.2"/>
+                        <path d="M16 8C11.58 8 8 11.58 8 16C8 20.42 11.58 24 16 24C20.42 24 24 20.42 24 16C24 11.58 20.42 8 16 8ZM16 22C12.69 22 10 19.31 10 16C10 12.69 12.69 10 16 10C19.31 10 22 12.69 22 16C22 19.31 19.31 22 16 22Z" fill="url(#gradient)"/>
+                        <circle cx="16" cy="14" r="2" fill="url(#gradient)"/>
+                        <circle cx="12" cy="18" r="1.5" fill="url(#gradient)"/>
+                        <circle cx="20" cy="18" r="1.5" fill="url(#gradient)"/>
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="logo-text">Lumina Care</span>
+                </div>
+                <div class="nav-links">
+                    <a href="home.html" class="nav-link">Home</a>
+                    <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                    <a href="history.html" class="nav-link">History</a>
+                    <a href="chat.html" class="nav-link">Skincare Assistant</a>
+                    <a href="settings.html" class="nav-link">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="dashboard-page">
+        <div class="container">
+            <!-- Welcome Section -->
+            <div class="dashboard-header">
+                <div class="welcome-section">
+                    <div class="welcome-text">
+                        <h1>Welcome back, <span class="gradient-text">User</span>!</h1>
+                        <p>Here's your skin health overview</p>
+                    </div>
+                    <div class="quick-actions">
+                        <a href="home.html" class="btn-gradient">
+                            <i class="fas fa-plus"></i>
+                            New Analysis
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon analysis">
+                        <i class="fas fa-face-smile"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>12</h3>
+                        <p>Total Analyses</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon improvement">
+                        <i class="fas fa-arrow-trend-up"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>+15%</h3>
+                        <p>Skin Improvement</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon streak">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>7 Days</h3>
+                        <p>Current Streak</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon member">
+                        <i class="fas fa-calendar"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>2 Months</h3>
+                        <p>Member Since</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="dashboard-grid">
+                <!-- Recent Analyses -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Recent Analyses</h3>
+                        <a href="history.html">View All</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="analysis-list">
+                            <div class="analysis-item" onclick="window.location.href='result.html'">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23f1f5f9'/%3E%3Ccircle cx='32' cy='28' r='16' fill='%23cbd5e1'/%3E%3Cellipse cx='32' cy='48' rx='20' ry='14' fill='%23cbd5e1'/%3E%3C/svg%3E" alt="Analysis" class="analysis-thumb">
+                                <div class="analysis-info">
+                                    <h4>Full Face Analysis</h4>
+                                    <p>Dec 15, 2024 • Acne, Dark Circles</p>
+                                </div>
+                                <div class="analysis-score">
+                                    <div class="score-badge high">85</div>
+                                </div>
+                            </div>
+                            <div class="analysis-item" onclick="window.location.href='result.html'">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23f1f5f9'/%3E%3Ccircle cx='32' cy='28' r='16' fill='%23cbd5e1'/%3E%3Cellipse cx='32' cy='48' rx='20' ry='14' fill='%23cbd5e1'/%3E%3C/svg%3E" alt="Analysis" class="analysis-thumb">
+                                <div class="analysis-info">
+                                    <h4>Skin Check</h4>
+                                    <p>Dec 10, 2024 • Wrinkles, Pigmentation</p>
+                                </div>
+                                <div class="analysis-score">
+                                    <div class="score-badge medium">72</div>
+                                </div>
+                            </div>
+                            <div class="analysis-item" onclick="window.location.href='result.html'">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23f1f5f9'/%3E%3Ccircle cx='32' cy='28' r='16' fill='%23cbd5e1'/%3E%3Cellipse cx='32' cy='48' rx='20' ry='14' fill='%23cbd5e1'/%3E%3C/svg%3E" alt="Analysis" class="analysis-thumb">
+                                <div class="analysis-info">
+                                    <h4>Morning Check</h4>
+                                    <p>Dec 5, 2024 • Skin Type Analysis</p>
+                                </div>
+                                <div class="analysis-score">
+                                    <div class="score-badge high">90</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div style="display: flex; flex-direction: column; gap: 24px;">
+                    <!-- Skin Profile -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>Your Skin Profile</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="skin-type-display">
+                                <div class="skin-type-icon">
+                                    <i class="fas fa-leaf"></i>
+                                </div>
+                                <h4>Combination Skin</h4>
+                                <p>Oily T-Zone, Dry Cheeks</p>
+                                <div class="skin-concerns">
+                                    <span class="concern-tag active">Acne</span>
+                                    <span class="concern-tag">Dark Circles</span>
+                                    <span class="concern-tag">Pigmentation</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Tips -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>Daily Tips</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="tips-list">
+                                <div class="tip-item">
+                                    <div class="tip-icon">
+                                        <i class="fas fa-sun"></i>
+                                    </div>
+                                    <p>Don't forget SPF 30+ sunscreen today!</p>
+                                </div>
+                                <div class="tip-item">
+                                    <div class="tip-icon">
+                                        <i class="fas fa-glass-water"></i>
+                                    </div>
+                                    <p>Drink at least 8 glasses of water</p>
+                                </div>
+                                <div class="tip-item">
+                                    <div class="tip-icon">
+                                        <i class="fas fa-moon"></i>
+                                    </div>
+                                    <p>Remember your evening skincare routine</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                            <circle cx="16" cy="16" r="14" fill="url(#footerGradient)" opacity="0.2"/>
+                            <path d="M16 8C11.58 8 8 11.58 8 16C8 20.42 11.58 24 16 24C20.42 24 24 20.42 24 16C24 11.58 20.42 8 16 8ZM16 22C12.69 22 10 19.31 10 16C10 12.69 12.69 10 16 10C19.31 10 22 12.69 22 16C22 19.31 19.31 22 16 22Z" fill="url(#footerGradient)"/>
+                            <defs>
+                                <linearGradient id="footerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#667eea"/>
+                                    <stop offset="100%" style="stop-color:#764ba2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span>Lumina Care</span>
+                    </div>
+                    <p>AI-powered skincare analysis for personalized beauty solutions.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <a href="#">Features</a>
+                    <a href="#">How it works</a>
+                    <a href="#">Pricing</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Lumina Care. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
