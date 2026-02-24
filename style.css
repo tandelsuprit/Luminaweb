@@ -1983,3 +1983,63 @@ body.dark-mode .additional-tips h4 {
 body.dark-mode .additional-tips li {
     color: var(--text-secondary);
 }
+
+/* Dark Mode - Buttons */
+body.dark-mode .btn-outline { background: transparent; border-color: #667eea; color: #667eea; }
+body.dark-mode .btn-outline:hover { background: #667eea; color: #fff; }
+body.dark-mode .btn-primary { background: var(--primary-gradient); color: #fff; }
+body.dark-mode .btn-secondary { background: var(--surface); border-color: var(--border); color: var(--text-primary); }
+body.dark-mode .btn-secondary:hover { border-color: #667eea; color: #667eea; }
+body.dark-mode .btn-gradient { background: var(--primary-gradient); color: #fff; }
+body.dark-mode .btn-web-version { background: var(--primary-gradient); color: #fff; }
+body.dark-mode .btn-change { background: var(--surface); color: var(--text-primary); }
+body.dark-mode .btn-icon-only { background: var(--surface); border-color: var(--border); color: var(--text-secondary); }
+body.dark-mode .btn-icon-only:hover { background: rgba(102,126,234,0.1); border-color: #667eea; color: #667eea; }
+body.dark-mode .btn-send { background: var(--primary-gradient); color: #fff; }
+body.dark-mode .btn-export { background: var(--surface); border-color: var(--border); color: var(--text-primary); }
+body.dark-mode .btn-export:hover { border-color: #667eea; color: #667eea; }
+body.dark-mode .btn-social { background: var(--surface); border-color: var(--border); color: var(--text-primary); }
+body.dark-mode .btn-social:hover { border-color: #667eea; box-shadow: 0 2px 8px rgba(102,126,234,0.2); }
+
+/* Dark Mode - Form Elements */
+body.dark-mode input[type="text"], body.dark-mode input[type="email"], body.dark-mode input[type="password"],
+body.dark-mode input[type="date"], body.dark-mode input[type="number"], body.dark-mode input[type="tel"],
+body.dark-mode textarea, body.dark-mode select { background: var(--surface); border-color: var(--border); color: var(--text-primary); }
+body.dark-mode input::placeholder { color: var(--text-secondary); }
+body.dark-mode input:focus, body.dark-mode textarea:focus, body.dark-mode select:focus { border-color: #667eea; outline: none; }
+
+/* Dark Mode - Cards & Surfaces */
+body.dark-mode .upload-card { background: var(--surface); box-shadow: 0 4px 6px rgba(0,0,0,0.3),0 10px 20px rgba(0,0,0,0.2); }
+body.dark-mode .feature-card { background: var(--surface); border-color: var(--border); }
+body.dark-mode .step-card { background: var(--surface); border-color: var(--border); }
+body.dark-mode .overview-card { background: var(--surface); border-color: var(--border); }
+body.dark-mode .chart-card { background: var(--surface); border-color: var(--border); }
+body.dark-mode .history-table-card { background: var(--surface); border-color: var(--border); }
+body.dark-mode table th { background: rgba(102,126,234,0.1); color: var(--text-primary); }
+body.dark-mode table td { border-bottom-color: var(--border); color: var(--text-primary); }
+body.dark-mode tr:hover td { background: rgba(102,126,234,0.05); }
+
+/* Dark Mode - Filter & Pagination */
+body.dark-mode .filter-bar { background: var(--surface); border-color: var(--border); }
+body.dark-mode .filter-btn { background: var(--surface); border-color: var(--border); color: var(--text-secondary); }
+body.dark-mode .filter-btn:hover, body.dark-mode .filter-btn.active { background: rgba(102,126,234,0.1); border-color: #667eea; color: #667eea; }
+body.dark-mode .page-btn { background: var(--surface); border-color: var(--border); color: var(--text-primary); }
+body.dark-mode .page-btn:hover, body.dark-mode .page-btn.active { background: #667eea; border-color: #667eea; color: #fff; }
+
+/* Dark Mode - Misc */
+body.dark-mode .quick-question-btn { background: var(--surface); border-color: var(--border); color: var(--text-primary); }
+body.dark-mode .quick-question-btn:hover { border-color: #667eea; color: #667eea; }
+body.dark-mode .image-container img { border-color: var(--border); }
+body.dark-mode .routine-tabs { border-bottom-color: var(--border); }
+body.dark-mode .tab-btn { color: var(--text-secondary); }
+body.dark-mode .tab-btn:hover { color: #667eea; }
+body.dark-mode .phone-frame { background: #0f172a; }
+body.dark-mode .phone-screen { background: linear-gradient(180deg,#1e293b 0%,#0f172a 100%); }
+body.dark-mode .analysis-bar, body.dark-mode .score-bar { background: var(--border); }
+body.dark-mode .date-range input { background: var(--surface); border-color: var(--border); color: var(--text-primary); }
+body.dark-mode .chart-header, body.dark-mode .table-header { border-bottom-color: var(--border); }
+body.dark-mode .chart-header h3, body.dark-mode .table-header h3 { color: var(--text-primary); }
+body.dark-mode .chart-header select { background: var(--surface); border-color: var(--border); color: var(--text-primary); }
+body.dark-mode .pagination { border-top-color: var(--border); }
+body.dark-mode .pagination-info { color: var(--text-secondary); }
+body.dark-mode [style*="background: #fef3c7"] { background: #422006 !important; color: #fcd34d !important; border-bottom-color: #d97706 !important; }
