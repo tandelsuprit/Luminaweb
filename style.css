@@ -2043,3 +2043,20 @@ body.dark-mode .chart-header select { background: var(--surface); border-color: 
 body.dark-mode .pagination { border-top-color: var(--border); }
 body.dark-mode .pagination-info { color: var(--text-secondary); }
 body.dark-mode [style*="background: #fef3c7"] { background: #422006 !important; color: #fcd34d !important; border-bottom-color: #d97706 !important; }
+
+/* Dark Mode - Dashboard Specific */
+body.dark-mode .analysis-item { background: #1e293b; }
+body.dark-mode .analysis-item:hover { background: #334155; }
+body.dark-mode .tip-item { background: #1e293b; }
+body.dark-mode .concern-tag { background: #1e293b; border-color: var(--border); color: var(--text-secondary); }
+body.dark-mode .empty-state-icon { background: #1e293b; color: var(--text-secondary); }
+body.dark-mode .stat-card { background: var(--surface); border-color: var(--border); }
+body.dark-mode .dashboard-card { background: var(--surface); border-color: var(--border); }
+body.dark-mode .card-header { border-bottom-color: var(--border); }
+body.dark-mode .card-header h3 { color: var(--text-primary); }
+body.dark-mode .card-header a { color: #667eea; }
+body.dark-mode .welcome-text h1 { color: var(--text-primary); }
+body.dark-mode .welcome-text p { color: var(--text-secondary); }
+body.dark-mode .skin-type-display { color: var(--text-primary); }
+body.dark-mode .skin-type-display h4 { color: var(--text-primary); }
+body.dark-mode .skin-type-display p { color: var(--text-secondary); }
