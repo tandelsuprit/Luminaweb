@@ -400,5 +400,11 @@
             window.location.href = 'preprocess.html';
         });
     </script>
+
+    <script>
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
 </body>
 </html>
