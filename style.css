@@ -1658,3 +1658,328 @@ body {
     .landing-title { font-size: 32px; }
     .landing-auth-buttons { gap: 8px; }
 }
+
+/* ── Dark Mode ── */
+body.dark-mode {
+    --background: #0f172a;
+    --surface: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border: #334155;
+}
+
+body.dark-mode .navbar {
+    background: rgba(30, 41, 59, 0.95);
+    border-bottom-color: var(--border);
+}
+
+body.dark-mode .logo {
+    color: var(--text-primary);
+}
+
+body.dark-mode .nav-link {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .nav-link:hover,
+body.dark-mode .nav-link.active {
+    color: #667eea;
+}
+
+body.dark-mode .landing-nav {
+    background: rgba(30, 41, 59, 0.98);
+}
+
+body.dark-mode .upload-area {
+    background: #1e293b;
+    border-color: var(--border);
+}
+
+body.dark-mode .upload-area:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+body.dark-mode .footer {
+    background: var(--surface);
+    border-top-color: var(--border);
+}
+
+body.dark-mode .footer-section a {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .footer-section p {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .footer-bottom {
+    border-top-color: var(--border);
+    color: var(--text-secondary);
+}
+
+body.dark-mode .result-card {
+    background: var(--surface);
+    border-color: var(--border);
+}
+
+body.dark-mode .analysis-item {
+    background: #1e293b;
+}
+
+body.dark-mode .routine-step {
+    background: #1e293b;
+}
+
+body.dark-mode .tip {
+    background: var(--surface);
+    border-color: var(--border);
+}
+
+body.dark-mode .key-ingredients,
+body.dark-mode .avoid-ingredients,
+body.dark-mode .additional-tips {
+    background: #1e293b;
+}
+
+body.dark-mode .chat-container {
+    background: var(--surface);
+    border-color: var(--border);
+}
+
+body.dark-mode .chat-header {
+    border-bottom-color: var(--border);
+}
+
+body.dark-mode .chat-header h2 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .status {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .btn-icon-only {
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+
+body.dark-mode .chat-messages {
+    background: var(--surface);
+}
+
+body.dark-mode .bot-message .message-bubble {
+    background: #1e293b;
+    color: var(--text-primary);
+}
+
+body.dark-mode .quick-questions {
+    background: #1e293b;
+}
+
+body.dark-mode .quick-question-btn {
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+
+body.dark-mode .chat-input-container {
+    border-top-color: var(--border);
+}
+
+body.dark-mode .chat-input-wrapper input {
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+
+body.dark-mode .chat-disclaimer {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .auth-page {
+    background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+}
+
+body.dark-mode .auth-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+}
+
+body.dark-mode .auth-form h2 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .form-subtitle {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .form-group label {
+    color: var(--text-primary);
+}
+
+body.dark-mode .form-group input {
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+
+body.dark-mode .checkbox-label {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .form-divider::before {
+    background: var(--border);
+}
+
+body.dark-mode .form-divider span {
+    background: var(--surface);
+    color: var(--text-secondary);
+}
+
+body.dark-mode .btn-social {
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+
+body.dark-mode .form-footer {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .settings-sidebar {
+    background: var(--surface);
+    border-color: var(--border);
+}
+
+body.dark-mode .user-info {
+    border-bottom-color: var(--border);
+}
+
+body.dark-mode .user-info h3 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .user-info p {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .settings-nav-item:hover {
+    background: #334155;
+    color: var(--text-primary);
+}
+
+body.dark-mode .settings-card {
+    background: var(--surface);
+    border-color: var(--border);
+}
+
+body.dark-mode .settings-card-header {
+    border-bottom-color: var(--border);
+}
+
+body.dark-mode .settings-card-header h2 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .settings-card-header p {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .form-group textarea {
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+
+body.dark-mode .form-hint {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .toggle-item {
+    border-bottom-color: var(--border);
+}
+
+body.dark-mode .toggle-info h4 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .toggle-info p {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .notification-item {
+    border-bottom-color: var(--border);
+}
+
+body.dark-mode .notification-info h4 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .notification-info p {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .skin-profile-item {
+    background: #1e293b;
+}
+
+body.dark-mode .skin-profile-item h4 {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .skin-profile-item .value {
+    color: var(--text-primary);
+}
+
+body.dark-mode .landing-main {
+    background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+}
+
+body.dark-mode .hero {
+    background: linear-gradient(180deg, rgba(102,126,234,0.1) 0%, rgba(30,41,59,0) 100%);
+}
+
+body.dark-mode .landing-cta-section {
+    background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+    border-color: rgba(102,126,234,0.2);
+}
+
+body.dark-mode .landing-web-link {
+    border-top-color: var(--border);
+}
+
+body.dark-mode .results-header h1 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .results-header p {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .recommendations-header h3 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .recommendations-header p {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .step-content h4 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .step-content p {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .key-ingredients h4,
+body.dark-mode .avoid-ingredients h4,
+body.dark-mode .additional-tips h4 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .additional-tips li {
+    color: var(--text-secondary);
+}

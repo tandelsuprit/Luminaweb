@@ -780,5 +780,74 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // Settings Navigation
+        const settingsNavItems = document.querySelectorAll('.settings-nav-item');
+        const settingsCards = document.querySelectorAll('.settings-card');
+
+        const sectionMap = {
+            'Profile': 0,
+            'Notifications': 1,
+            'Appearance': 2,
+            'Privacy': 3,
+            'Data': 4
+        };
+
+        settingsNavItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                // Remove active class from all nav items
+                settingsNavItems.forEach(nav => nav.classList.remove('active'));
+                // Add active class to clicked item
+                item.classList.add('active');
+
+                // Get the section name from the button text
+                const sectionName = item.textContent.trim();
+                const sectionIndex = sectionMap[sectionName];
+
+                if (sectionIndex !== undefined) {
+                    // Hide all cards first
+                    settingsCards.forEach(card => card.style.display = 'none');
+                    // Show the selected card
+                    if (settingsCards[sectionIndex]) {
+                        settingsCards[sectionIndex].style.display = 'block';
+                    }
+                }
+            });
+        });
+
+        // Hide all settings cards except first 2 by default (Profile and Notifications)
+        settingsCards.forEach((card, index) => {
+            if (index > 1) {
+                card.style.display = 'none';
+            }
+        });
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            darkModeToggle.checked = true;
+            document.body.classList.add('dark-mode');
+        }
+
+        darkModeToggle.addEventListener('change', () => {
+            if (darkModeToggle.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'false');
+            }
+        });
+
+        // Save button functionality
+        document.querySelectorAll('.btn-save').forEach(btn => {
+            btn.addEventListener('click', () => {
+                alert('Settings saved successfully!');
+            });
+        });
+    </script>
 </body>
 </html>
