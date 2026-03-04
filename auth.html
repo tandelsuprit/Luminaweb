@@ -173,7 +173,7 @@
                                 <input type="checkbox" id="rememberMe">
                                 <span>Remember me</span>
                             </label>
-                            <a href="#" class="forgot-password">Forgot password?</a>
+                            <a href="#" class="forgot-password" onclick="showForgotPasswordModal(); return false;">Forgot password?</a>
                         </div>
 
                         <button class="btn-primary" id="signInBtn" onclick="handleSignIn()">
@@ -264,6 +264,62 @@
             </div>
         </div>
     </main>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeForgotPasswordModal()">&times;</span>
+            <h2>Reset Password</h2>
+            <p>Please contact support at <strong>support@luminacare.com</strong> to reset your password.</p>
+            <button class="btn-primary" onclick="closeForgotPasswordModal()">OK</button>
+        </div>
+    </div>
+
+    <style>
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 32px;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        .modal-content h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        .modal-content p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 28px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+    </style>
 
     <script>
         // --- KEEP these UI functions as they are ---
@@ -389,6 +445,23 @@ async function handleSignUp() {
         }
     } catch (error) {
         showToast('❌ Backend Server connection failed!', 'error');
+    }
+}
+
+// --- Forgot Password Modal Functions ---
+function showForgotPasswordModal() {
+    document.getElementById('forgotPasswordModal').style.display = 'flex';
+}
+
+function closeForgotPasswordModal() {
+    document.getElementById('forgotPasswordModal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('forgotPasswordModal');
+    if (event.target === modal) {
+        closeForgotPasswordModal();
     }
 }
     </script>
