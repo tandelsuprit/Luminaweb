@@ -731,15 +731,78 @@
         document.getElementById('contrastSlider').addEventListener('input', updateSliderLabels);
         document.getElementById('sharpnessSlider').addEventListener('input', updateSliderLabels);
 
-        function processImage() {
+        async function processImage() {
             const overlay = document.getElementById('processingOverlay');
             overlay.classList.add('active');
             
-            setTimeout(() => {
+            const user_id = localStorage.getItem('user_id');
+            
+            if (!user_id) {
                 overlay.classList.remove('active');
-                // Navigate to results or analysis
-                alert('⚠️ Backend Not Connected\n\nThe AI analysis feature will be available once the ML model is integrated.\n\nThis would proceed to the analysis step.');
-            }, 2000);
+                alert('Please log in to continue');
+                window.location.href = 'auth.html';
+                return;
+            }
+            
+            // Get the image from the preview
+            const img = document.getElementById('previewImage');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size to match image natural size
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            
+            // Apply transformations
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            
+            // Get current transform values
+            const transform = getComputedStyle(img).transform;
+            if (transform && transform !== 'none') {
+                const matrix = transform.match(/matrix.*\((.+)\)/);
+                if (matrix) {
+                    const values = matrix[1].split(', ');
+                    ctx.transform(
+                        parseFloat(values[0]),
+                        parseFloat(values[1]),
+                        parseFloat(values[2]),
+                        parseFloat(values[3]),
+                        parseFloat(values[4]),
+                        parseFloat(values[5])
+                    );
+                }
+            }
+            
+            ctx.drawImage(img, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+            
+            // Convert to blob
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg'));
+            
+            // Create FormData and send to backend
+            const formData = new FormData();
+            formData.append('image', blob, 'image.jpg');
+            
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/recommend?user_id=${user_id}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Analysis failed');
+                }
+                
+                const data = await response.json();
+                const inserted_id = data.inserted_id;
+                
+                // Redirect to result page with the record ID
+                window.location.href = `result.html?id=${inserted_id}`;
+                
+            } catch (error) {
+                console.error('Error processing image:', error);
+                overlay.classList.remove('active');
+                alert('Error processing image. Please try again.');
+            }
         }
 
         function skipPreprocessing() {

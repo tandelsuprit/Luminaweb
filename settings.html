@@ -782,6 +782,16 @@
     </footer>
 
     <script>
+        // Auth Guard - Protect authenticated pages
+        (function() {
+            var userId = localStorage.getItem('user_id');
+            if (!userId) {
+                alert('Please login to continue');
+                window.location.href = 'auth.html';
+                return;
+            }
+        })();
+
         // Settings Navigation
         const settingsNavItems = document.querySelectorAll('.settings-nav-item');
         const settingsCards = document.querySelectorAll('.settings-card');

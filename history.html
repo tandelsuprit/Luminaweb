@@ -828,9 +828,107 @@
     </footer>
 
     <script>
+        // Auth Guard - Protect authenticated pages
+        (function() {
+            var userId = localStorage.getItem('user_id');
+            if (!userId) {
+                alert('Please login to continue');
+                window.location.href = 'auth.html';
+                return;
+            }
+        })();
+
+        // Check for dark mode
         if (localStorage.getItem('darkMode') === 'true') {
             document.body.classList.add('dark-mode');
         }
+
+        // Fetch history data on page load
+        async function loadHistory() {
+            const user_id = localStorage.getItem('user_id');
+            
+            if (!user_id) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/history/${user_id}`);
+                const data = await response.json();
+                
+                if (data.history && data.history.length > 0) {
+                    displayHistoryCards(data.history);
+                } else {
+                    document.querySelector('.history-table-card .table-body tbody').innerHTML = 
+                        '<tr><td colspan="5" style="text-align: center; padding: 40px;">No analysis history found. Start your first scan!</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading history:', error);
+            }
+        }
+
+        // Display history cards dynamically
+        function displayHistoryCards(records) {
+            const tbody = document.querySelector('.history-table-card .table-body tbody');
+            tbody.innerHTML = '';
+
+            records.forEach(record => {
+                const date = new Date(record.timestamp);
+                const formattedDate = date.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+                
+                const skinType = record.skin_type || 'Unknown';
+                const acneCount = record.acne_count || 0;
+                
+                // Get icon based on skin type
+                let iconClass = 'fa-face-smile';
+                let iconBg = 'full';
+                
+                if (skinType.toLowerCase().includes('oily')) {
+                    iconClass = 'fa-droplet';
+                    iconBg = 'acne';
+                } else if (skinType.toLowerCase().includes('dry')) {
+                    iconClass = 'fa-temperature-low';
+                    iconBg = 'wrinkles';
+                } else if (skinType.toLowerCase().includes('sensitive')) {
+                    iconClass = 'fa-heart-crack';
+                    iconBg = 'pigmentation';
+                }
+
+                const row = `
+                    <tr>
+                        <td class="analysis-date">${formattedDate}</td>
+                        <td>
+                            <div class="analysis-type">
+                                <div class="type-icon ${iconBg}"><i class="fas ${iconClass}"></i></div>
+                                ${skinType} Analysis
+                            </div>
+                        </td>
+                        <td>
+                            <div class="score-cell">
+                                <span>${100 - (acneCount * 5)}</span>
+                                <div class="score-bar">
+                                    <div class="score-bar-fill ${acneCount < 5 ? 'high' : acneCount < 10 ? 'medium' : 'low'}" style="width: ${Math.max(100 - (acneCount * 5), 0)}%;"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Acne Count: ${acneCount}</td>
+                        <td class="action-cell"><a href="result.html?id=${record._id}">View</a></td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            // Update pagination info
+            document.querySelector('.pagination-info').textContent = 
+                `Showing 1-${records.length} of ${records.length} results`;
+        }
+
+        // Load history on page load
+        document.addEventListener('DOMContentLoaded', loadHistory);
     </script>
 </body>
 </html>

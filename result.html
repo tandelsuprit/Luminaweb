@@ -5,13 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analysis Results - Lumina Care</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .results-page { padding: 40px 0 80px; min-height: calc(100vh - 65px); }
+        .results-header { text-align: center; margin-bottom: 40px; }
+        .success-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 8px 16px; border-radius: 20px; font-weight: 600; margin-bottom: 16px; }
+        .results-header h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+        .results-header p { color: var(--text-secondary); }
+        .results-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 32px; margin-bottom: 40px; }
+        @media (max-width: 968px) { .results-grid { grid-template-columns: 1fr; } }
+        .result-card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); padding: 24px; margin-bottom: 24px; }
+        .result-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+        .analysis-grid { display: flex; flex-direction: column; gap: 20px; }
+        .analysis-item { padding: 16px; background: #f8fafc; border-radius: 12px; }
+        .analysis-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .analysis-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .analysis-icon.skin-type { background: rgba(102,126,234,0.1); color: #667eea; }
+        .analysis-icon.acne { background: rgba(245,158,11,0.1); color: #f59e0b; }
+        .analysis-header h4 { font-size: 14px; font-weight: 500; color: var(--text-secondary); }
+        .analysis-header .analysis-value { font-size: 18px; font-weight: 600; }
+        .analysis-desc { font-size: 13px; color: var(--text-secondary); }
+        .recommendations-section { margin-top: 40px; }
+        .recommendations-header { text-align: center; margin-bottom: 32px; }
+        .recommendations-header h3 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .recommendations-header p { color: var(--text-secondary); }
+        .routine-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .tab-btn { padding: 12px 20px; background: transparent; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s; }
+        .tab-btn:hover { background: #f8fafc; color: #667eea; }
+        .tab-btn.active { background: rgba(102,126,234,0.1); color: #667eea; }
+        .routine-content { display: none; }
+        .routine-content.active { display: block; }
+        .routine-steps { display: flex; flex-direction: column; gap: 16px; }
+        .routine-step { display: flex; gap: 16px; padding: 16px; background: #f8fafc; border-radius: 12px; }
+        .step-number { width: 36px; height: 36px; background: var(--primary-gradient); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; }
+        .step-content h4 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+        .step-content p { font-size: 14px; color: var(--text-secondary); margin-bottom: 8px; }
+        .key-ingredients { margin-top: 32px; padding: 20px; background: #f8fafc; border-radius: 12px; }
+        .key-ingredients h4 { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+        .ingredients-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .ingredient-tag { padding: 8px 16px; background: rgba(16,185,129,0.1); color: #10b981; border-radius: 20px; font-size: 13px; font-weight: 500; }
+        .additional-tips { margin-top: 24px; }
+        .additional-tips h4 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+        .additional-tips ul { list-style: none; padding: 0; }
+        .additional-tips li { padding: 8px 0; padding-left: 24px; position: relative; color: var(--text-secondary); font-size: 14px; }
+        .additional-tips li::before { content: '→'; position: absolute; left: 0; color: #667eea; }
+        .action-buttons { display: flex; gap: 16px; justify-content: center; margin-top: 40px; }
+        .btn-primary, .btn-secondary { padding: 14px 28px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s; text-decoration: none; }
+        .btn-primary { background: var(--primary-gradient); color: white; border: none; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+        .btn-secondary { background: white; border: 1px solid var(--border); color: var(--text-primary); }
+        .btn-secondary:hover { border-color: #667eea; color: #667eea; }
+        .loading-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; gap: 16px; }
+        .spinner { width: 48px; height: 48px; border: 4px solid rgba(102,126,234,0.2); border-top-color: #667eea; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { color: var(--text-secondary); }
+        .error-container { text-align: center; padding: 60px 20px; }
+        .error-container h2 { color: #ef4444; margin-bottom: 12px; }
+        .error-container p { color: var(--text-secondary); margin-bottom: 24px; }
+    </style>
 </head>
 <body>
-    <!-- Sample Notice Banner -->
-    <div style="background: #fef3c7; color: #92400e; text-align: center; padding: 12px; font-weight: 500; border-bottom: 2px solid #fbbf24;">
-        ℹ️ This is a SAMPLE result page showing the UI design. Actual analysis requires backend integration.
-    </div>
-
     <nav class="navbar">
         <div class="container">
             <div class="nav-content">
@@ -36,450 +89,121 @@
                     <a href="dashboard.html" class="nav-link">Dashboard</a>
                     <a href="history.html" class="nav-link">History</a>
                     <a href="chat.html" class="nav-link">Skincare Assistant</a>
-                    <a href="result.html" class="nav-link active">Sample Results</a>
-                    <a href="settings.html" class="nav-link">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
-                        </svg>
-                    </a>
+                    <a href="settings.html" class="nav-link"><svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg></a>
                 </div>
             </div>
         </div>
     </nav>
-
     <main class="results-page">
         <div class="container">
-            <div class="results-header">
-                <div class="success-badge">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="10" fill="#10b981" opacity="0.1"/>
-                        <path d="M9 12L11 14L15 10" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Analysis Complete</span>
-                </div>
-                <h1>Your Skin Analysis Results</h1>
-                <p>Here's what our AI detected from your facial analysis</p>
+            <div id="loadingState" class="loading-container">
+                <div class="spinner"></div>
+                <div class="loading-text">Loading your analysis results...</div>
             </div>
-
-            <div class="results-grid">
-                <div class="image-section">
-                    <div class="result-card">
-                        <h3>Uploaded Image</h3>
-                        <div class="image-container">
-                            <img src="data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='400' height='400' fill='%23f3f4f6'/%3E%3Ccircle cx='200' cy='160' r='60' fill='%23d1d5db'/%3E%3Ccircle cx='180' cy='150' r='10' fill='%23374151'/%3E%3Ccircle cx='220' cy='150' r='10' fill='%23374151'/%3E%3Cpath d='M 180 200 Q 200 220 220 200' stroke='%23374151' stroke-width='3' fill='none'/%3E%3Ctext x='200' y='350' text-anchor='middle' font-size='20' fill='%239ca3af'%3EYour Face Image%3C/text%3E%3C/svg%3E" alt="Analyzed Face">
-                        </div>
-                    </div>
-
-                    <div class="result-card">
-                        <h3>Overall Confidence</h3>
-                        <div class="confidence-meter">
-                            <div class="confidence-circle">
-                                <svg width="160" height="160">
-                                    <circle cx="80" cy="80" r="70" fill="none" stroke="#e5e7eb" stroke-width="12"/>
-                                    <circle cx="80" cy="80" r="70" fill="none" stroke="url(#confidenceGradient)" stroke-width="12" stroke-dasharray="440" stroke-dashoffset="88" stroke-linecap="round" transform="rotate(-90 80 80)"/>
-                                    <defs>
-                                        <linearGradient id="confidenceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop offset="0%" style="stop-color:#667eea"/>
-                                            <stop offset="100%" style="stop-color:#764ba2"/>
-                                        </linearGradient>
-                                    </defs>
-                                </svg>
-                                <div class="confidence-value">
-                                    <span class="percentage">92%</span>
-                                    <span class="label">Confidence</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="analysis-section">
-                    <div class="result-card">
-                        <h3>Skin Analysis</h3>
-                        <div class="analysis-grid">
-                            <div class="analysis-item">
-                                <div class="analysis-header">
-                                    <div class="analysis-icon skin-type">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h4>Skin Type</h4>
-                                        <p class="analysis-value">Combination</p>
-                                    </div>
-                                </div>
-                                <div class="analysis-bar">
-                                    <div class="bar-fill" style="width: 85%; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);"></div>
-                                </div>
-                                <p class="analysis-desc">Your skin shows characteristics of both oily and dry areas, typical of combination skin type.</p>
-                            </div>
-
-                            <div class="analysis-item">
-                                <div class="analysis-header">
-                                    <div class="analysis-icon acne">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <circle cx="12" cy="12" r="3" fill="currentColor"/>
-                                            <circle cx="7" cy="9" r="2" fill="currentColor"/>
-                                            <circle cx="17" cy="14" r="2.5" fill="currentColor"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h4>Acne Level</h4>
-                                        <p class="analysis-value">Moderate</p>
-                                    </div>
-                                </div>
-                                <div class="analysis-bar">
-                                    <div class="bar-fill" style="width: 60%; background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);"></div>
-                                </div>
-                                <p class="analysis-desc">Detected moderate acne presence. Targeted treatment is recommended for affected areas.</p>
-                            </div>
-
-                            <div class="analysis-item">
-                                <div class="analysis-header">
-                                    <div class="analysis-icon dark-circles">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <circle cx="9" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-                                            <circle cx="15" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h4>Dark Circles</h4>
-                                        <p class="analysis-value">Mild</p>
-                                    </div>
-                                </div>
-                                <div class="analysis-bar">
-                                    <div class="bar-fill" style="width: 40%; background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);"></div>
-                                </div>
-                                <p class="analysis-desc">Slight under-eye darkness detected. Eye cream and adequate sleep can help improve this.</p>
-                            </div>
-
-                            <div class="analysis-item">
-                                <div class="analysis-header">
-                                    <div class="analysis-icon pigmentation">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <path d="M7 12C7 12 9 8 12 8C15 8 17 12 17 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                            <path d="M7 15C7 15 9 18 12 18C15 18 17 15 17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h4>Pigmentation</h4>
-                                        <p class="analysis-value">Low</p>
-                                    </div>
-                                </div>
-                                <div class="analysis-bar">
-                                    <div class="bar-fill" style="width: 25%; background: linear-gradient(90deg, #fa709a 0%, #fee140 100%);"></div>
-                                </div>
-                                <p class="analysis-desc">Minimal pigmentation detected. Maintain sun protection to prevent future issues.</p>
-                            </div>
-
-                            <div class="analysis-item">
-                                <div class="analysis-header">
-                                    <div class="analysis-icon wrinkles">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <path d="M5 10C5 10 8 7 12 7C16 7 19 10 19 10M5 14C5 14 8 11 12 11C16 11 19 14 19 14M5 18C5 18 8 15 12 15C16 15 19 18 19 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h4>Wrinkles</h4>
-                                        <p class="analysis-value">Minimal</p>
-                                    </div>
-                                </div>
-                                <div class="analysis-bar">
-                                    <div class="bar-fill" style="width: 20%; background: linear-gradient(90deg, #30cfd0 0%, #330867 100%);"></div>
-                                </div>
-                                <p class="analysis-desc">Very few fine lines detected. Great news! Continue with preventive anti-aging care.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div id="errorState" class="error-container" style="display: none;">
+                <h2>Error Loading Results</h2>
+                <p id="errorMessage">Unable to load analysis results. Please try again.</p>
+                <button class="btn-primary" onclick="window.location.href='home.html'">Go to Home</button>
             </div>
-
-            <div class="recommendations-section">
-                <div class="result-card">
-                    <div class="recommendations-header">
-                        <h3>Personalized Skincare Recommendations</h3>
-                        <p>Based on your unique skin analysis, here's your customized routine</p>
+            <div id="resultsContent" style="display: none;">
+                <div class="results-header">
+                    <div class="success-badge">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" fill="#10b981" opacity="0.1"/>
+                            <path d="M9 12L11 14L15 10" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Analysis Complete</span>
                     </div>
-
-                    <div class="routine-tabs">
-                        <button class="tab-btn active" data-tab="morning">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                <circle cx="10" cy="10" r="3"/>
-                                <path d="M10 2V4M10 16V18M18 10H16M4 10H2M15.66 4.34L14.24 5.76M5.76 14.24L4.34 15.66M15.66 15.66L14.24 14.24M5.76 5.76L4.34 4.34"/>
-                            </svg>
-                            Morning Routine
-                        </button>
-                        <button class="tab-btn" data-tab="evening">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M10 2C10 2 6 6 6 10C6 14 10 18 10 18C10 18 14 14 14 10C14 6 10 2 10 2Z"/>
-                            </svg>
-                            Evening Routine
-                        </button>
-                        <button class="tab-btn" data-tab="weekly">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                <rect x="3" y="4" width="14" height="14" rx="2"/>
-                                <path d="M3 8H17M7 4V8M13 4V8"/>
-                            </svg>
-                            Weekly Care
-                        </button>
-                    </div>
-
-                    <div class="routine-content">
-                        <div class="tab-panel active" id="morning">
-                            <div class="routine-steps">
-                                <div class="routine-step">
-                                    <div class="step-number">1</div>
-                                    <div class="step-content">
-                                        <h4>Gentle Cleanser</h4>
-                                        <p>Start with a mild, pH-balanced cleanser to remove overnight oils without stripping your skin. Look for sulfate-free formulas.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">🕐 30-60 seconds</span>
-                                            <span class="tip">💧 Lukewarm water</span>
-                                        </div>
-                                    </div>
+                    <h1>Your Skin Analysis Results</h1>
+                    <p id="analysisDate">Here's what our AI detected from your facial analysis</p>
+                </div>
+                <div class="results-grid">
+                    <div>
+                        <div class="result-card">
+                            <h3>Analysis Date</h3>
+                            <p id="timestamp" style="color: var(--text-secondary);">-</p>
+                        </div>
+                        <div class="result-card">
+                            <h3>Skin Type</h3>
+                            <div style="text-align: center; padding: 20px 0;">
+                                <div class="analysis-icon skin-type" style="width: 80px; height: 80px; margin: 0 auto 16px; font-size: 36px;">
+                                    <i class="fas fa-leaf"></i>
                                 </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">2</div>
-                                    <div class="step-content">
-                                        <h4>Toner</h4>
-                                        <p>Apply a balancing toner to restore pH levels and prep skin for better absorption. Choose alcohol-free options.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">✨ Pat, don't rub</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">3</div>
-                                    <div class="step-content">
-                                        <h4>Vitamin C Serum</h4>
-                                        <p>Apply a brightening serum with Vitamin C to combat pigmentation and protect against environmental damage.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">⚡ 2-3 drops</span>
-                                            <span class="tip">🎯 Focus on dark spots</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">4</div>
-                                    <div class="step-content">
-                                        <h4>Eye Cream</h4>
-                                        <p>Gently pat a hydrating eye cream around the orbital bone to address dark circles and prevent fine lines.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">👆 Ring finger only</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">5</div>
-                                    <div class="step-content">
-                                        <h4>Lightweight Moisturizer</h4>
-                                        <p>Use a gel-based or lightweight moisturizer that won't clog pores. Look for non-comedogenic formulas.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">🌿 Non-comedogenic</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">6</div>
-                                    <div class="step-content">
-                                        <h4>Sunscreen SPF 30+</h4>
-                                        <p>Never skip sunscreen! Apply broad-spectrum SPF 30 or higher as the final step. Reapply every 2 hours if outdoors.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">☀️ Broad spectrum</span>
-                                            <span class="tip">🔄 Reapply every 2hrs</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h4 id="skinType" style="font-size: 24px; font-weight: 700;">-</h4>
                             </div>
                         </div>
-
-                        <div class="tab-panel" id="evening">
-                            <div class="routine-steps">
-                                <div class="routine-step">
-                                    <div class="step-number">1</div>
-                                    <div class="step-content">
-                                        <h4>Oil Cleanser (Double Cleanse)</h4>
-                                        <p>Start with an oil-based cleanser to remove makeup, sunscreen, and excess sebum accumulated during the day.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">🕐 1-2 minutes massage</span>
-                                        </div>
-                                    </div>
+                        <div class="result-card">
+                            <h3>Acne Count</h3>
+                            <div style="text-align: center; padding: 20px 0;">
+                                <div class="analysis-icon acne" style="width: 80px; height: 80px; margin: 0 auto 16px; font-size: 36px;">
+                                    <i class="fas fa-circle"></i>
                                 </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">2</div>
-                                    <div class="step-content">
-                                        <h4>Water-Based Cleanser</h4>
-                                        <p>Follow with your gentle morning cleanser for a thorough clean without over-drying.</p>
-                                    </div>
-                                </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">3</div>
-                                    <div class="step-content">
-                                        <h4>Exfoliating Toner (2-3x/week)</h4>
-                                        <p>Use a BHA or AHA toner to gently exfoliate and unclog pores. Start with 2x per week and adjust based on skin tolerance.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">⚠️ Not daily</span>
-                                            <span class="tip">🌙 Evening only</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">4</div>
-                                    <div class="step-content">
-                                        <h4>Treatment Serum</h4>
-                                        <p>Apply targeted treatments like niacinamide for acne or hyaluronic acid for hydration.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">🎯 Target specific concerns</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">5</div>
-                                    <div class="step-content">
-                                        <h4>Eye Cream</h4>
-                                        <p>Apply a richer eye cream in the evening to work while you sleep.</p>
-                                    </div>
-                                </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">6</div>
-                                    <div class="step-content">
-                                        <h4>Night Moisturizer</h4>
-                                        <p>Use a slightly richer moisturizer at night to support skin barrier repair during sleep.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">🌙 Repair while you sleep</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">7</div>
-                                    <div class="step-content">
-                                        <h4>Spot Treatment (As Needed)</h4>
-                                        <p>Apply benzoyl peroxide or salicylic acid spot treatment directly on active acne.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">📍 On spots only</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tab-panel" id="weekly">
-                            <div class="routine-steps">
-                                <div class="routine-step">
-                                    <div class="step-number">1-2x</div>
-                                    <div class="step-content">
-                                        <h4>Clay Mask (T-Zone)</h4>
-                                        <p>Apply a purifying clay mask to oily areas 1-2 times per week to control excess sebum and minimize pores.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">⏱️ 10-15 minutes</span>
-                                            <span class="tip">📍 T-zone only</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">1-2x</div>
-                                    <div class="step-content">
-                                        <h4>Hydrating Sheet Mask</h4>
-                                        <p>Use a hydrating sheet mask on dry areas or all over for an extra moisture boost.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">⏱️ 15-20 minutes</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">1x</div>
-                                    <div class="step-content">
-                                        <h4>Physical Exfoliation</h4>
-                                        <p>Gently exfoliate with a soft brush or gentle scrub once a week. Be very gentle to avoid irritation.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">⚠️ Gentle pressure</span>
-                                            <span class="tip">🔄 Circular motions</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="routine-step">
-                                    <div class="step-number">Weekly</div>
-                                    <div class="step-content">
-                                        <h4>Facial Massage</h4>
-                                        <p>Practice facial massage with your moisturizer to boost circulation and promote lymphatic drainage.</p>
-                                        <div class="step-tips">
-                                            <span class="tip">💆 5 minutes</span>
-                                            <span class="tip">⬆️ Upward motions</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h4 id="acneCount" style="font-size: 36px; font-weight: 700;">-</h4>
+                                <p style="color: var(--text-secondary);">blemishes detected</p>
                             </div>
                         </div>
                     </div>
-
-                    <div class="key-ingredients">
-                        <h4>🔑 Key Ingredients to Look For:</h4>
-                        <div class="ingredients-grid">
-                            <div class="ingredient-tag">Niacinamide</div>
-                            <div class="ingredient-tag">Salicylic Acid</div>
-                            <div class="ingredient-tag">Hyaluronic Acid</div>
-                            <div class="ingredient-tag">Vitamin C</div>
-                            <div class="ingredient-tag">Ceramides</div>
-                            <div class="ingredient-tag">Retinol (night)</div>
+                    <div>
+                        <div class="result-card">
+                            <h3>Analysis Summary</h3>
+                            <div class="analysis-grid">
+                                <div class="analysis-item">
+                                    <div class="analysis-header">
+                                        <div class="analysis-icon skin-type"><i class="fas fa-face-smile"></i></div>
+                                        <div>
+                                            <h4>Skin Type</h4>
+                                            <p class="analysis-value" id="summarySkinType">-</p>
+                                        </div>
+                                    </div>
+                                    <p class="analysis-desc">Your detected skin type based on facial analysis.</p>
+                                </div>
+                                <div class="analysis-item">
+                                    <div class="analysis-header">
+                                        <div class="analysis-icon acne"><i class="fas fa-exclamation-circle"></i></div>
+                                        <div>
+                                            <h4>Acne Level</h4>
+                                            <p class="analysis-value" id="acneLevel">-</p>
+                                        </div>
+                                    </div>
+                                    <p class="analysis-desc" id="acneDesc">Based on the number of blemishes detected.</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="avoid-ingredients">
-                        <h4>⚠️ Ingredients to Avoid:</h4>
-                        <div class="ingredients-grid">
-                            <div class="ingredient-tag avoid">Alcohol Denat</div>
-                            <div class="ingredient-tag avoid">Fragrance</div>
-                            <div class="ingredient-tag avoid">Heavy Oils</div>
-                            <div class="ingredient-tag avoid">Sodium Lauryl Sulfate</div>
-                        </div>
-                    </div>
-
-                    <div class="additional-tips">
-                        <h4>💡 Additional Tips:</h4>
-                        <ul>
-                            <li>Drink at least 8 glasses of water daily to keep skin hydrated from within</li>
-                            <li>Change pillowcases 2-3 times per week to prevent bacterial buildup</li>
-                            <li>Avoid touching your face throughout the day</li>
-                            <li>Get 7-8 hours of quality sleep for optimal skin repair</li>
-                            <li>Manage stress through meditation or exercise</li>
-                            <li>Maintain a balanced diet rich in antioxidants</li>
-                        </ul>
                     </div>
                 </div>
-            </div>
-
-            <div class="action-buttons">
-                <button class="btn-primary" onclick="window.location.href='index.html'">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M10 3L3 8V16C3 16.55 3.45 17 4 17H7V12H13V17H16C16.55 17 17 16.55 17 16V8L10 3Z"/>
-                    </svg>
-                    Back to Home
-                </button>
-                <button class="btn-secondary" onclick="window.location.href='chat.html'">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M18 6H14L12 3H8L6 6H2C1.45 6 1 6.45 1 7V17C1 17.55 1.45 18 2 18H18C18.55 18 19 17.55 19 17V7C19 6.45 18.55 6 18 6ZM10 15C8.34 15 7 13.66 7 12C7 10.34 8.34 9 10 9C11.66 9 13 10.34 13 12C13 13.66 11.66 15 10 15Z"/>
-                    </svg>
-                    Chat with Assistant
-                </button>
+                <div class="recommendations-section">
+                    <div class="result-card">
+                        <div class="recommendations-header">
+                            <h3>Personalized Skincare Recommendations</h3>
+                            <p>Based on your unique skin analysis</p>
+                        </div>
+                        <div class="routine-tabs">
+                            <button class="tab-btn active" data-tab="morning"><i class="fas fa-sun"></i> Morning Routine</button>
+                            <button class="tab-btn" data-tab="evening"><i class="fas fa-moon"></i> Evening Routine</button>
+                            <button class="tab-btn" data-tab="tips"><i class="fas fa-lightbulb"></i> Tips</button>
+                        </div>
+                        <div class="routine-content active" id="morning">
+                            <div class="routine-steps" id="morningRoutine"></div>
+                        </div>
+                        <div class="routine-content" id="evening">
+                            <div class="routine-steps" id="eveningRoutine"></div>
+                        </div>
+                        <div class="routine-content" id="tips">
+                            <div class="additional-tips" id="tipsContent"></div>
+                        </div>
+                        <div class="key-ingredients">
+                            <h4>Key Ingredients to Look For:</h4>
+                            <div class="ingredients-grid" id="keyIngredients"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-primary" onclick="window.location.href='dashboard.html'">View Dashboard</button>
+                    <button class="btn-secondary" onclick="window.location.href='chat.html'">Chat with Assistant</button>
+                </div>
             </div>
         </div>
     </main>
-
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -499,51 +223,215 @@
                     </div>
                     <p>AI-powered skincare analysis for personalized beauty solutions.</p>
                 </div>
-                <div class="footer-section">
-                    <h4>Product</h4>
-                    <a href="#">Features</a>
-                    <a href="#">How it works</a>
-                    <a href="#">Pricing</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Company</h4>
-                    <a href="#">About</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Contact</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                </div>
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2024 Lumina Care. All rights reserved.</p>
             </div>
         </div>
     </footer>
-
     <script>
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabPanels = document.querySelectorAll('.tab-panel');
+        const skinTypeRecommendations = {
+            "Oily": {
+                morning: [
+                    { title: "Foaming Cleanser", desc: "Use a salicylic acid cleanser to control excess oil." },
+                    { title: "Toner", desc: "Apply witch hazel or BHA toner to tighten pores." },
+                    { title: "Gel Moisturizer", desc: "Use lightweight, oil-free moisturizer." },
+                    { title: "Sunscreen", desc: "Apply non-comedogenic SPF 30+ sunscreen." }
+                ],
+                evening: [
+                    { title: "Double Cleanse", desc: "Start with oil cleanser, then foam cleanser." },
+                    { title: "Exfoliate (2-3x/week)", desc: "Use BHA to unclog pores." },
+                    { title: "Niacinamide Serum", desc: "Control oil production and reduce pores." },
+                    { title: "Lightweight Night Cream", desc: "Use gel-based moisturizer." }
+                ],
+                ingredients: ["Salicylic Acid", "Niacinamide", "BHA", "Zinc", "Tea Tree"],
+                tips: ["Blot oil throughout the day with matte paper", "Avoid heavy products", "Use clay masks 1-2 times per week", "Do not over-exfoliate"]
+            },
+            "Dry": {
+                morning: [
+                    { title: "Gentle Cleanser", desc: "Use cream or milk cleanser." },
+                    { title: "Hydrating Toner", desc: "Apply hyaluronic acid toner." },
+                    { title: "Vitamin C Serum", desc: "Add antioxidants and brightness." },
+                    { title: "Rich Moisturizer", desc: "Use cream-based moisturizer with ceramides." },
+                    { title: "Sunscreen", desc: "Apply SPF 30+ with hydrating ingredients." }
+                ],
+                evening: [
+                    { title: "Oil Cleanser", desc: "Gently remove makeup and impurities." },
+                    { title: "Hydrating Cleanser", desc: "Follow with gentle cream cleanser." },
+                    { title: "Hyaluronic Acid Serum", desc: "Apply to damp skin." },
+                    { title: "Retinol", desc: "Use anti-aging treatment (start 2x/week)." },
+                    { title: "Rich Night Cream", desc: "Lock in moisture overnight." }
+                ],
+                ingredients: ["Hyaluronic Acid", "Ceramides", "Glycerin", "Squalane", "Fatty Acids"],
+                tips: ["Drink plenty of water", "Use a humidifier in dry environments", "Avoid hot showers", "Apply moisturizer on damp skin"]
+            },
+            "Normal": {
+                morning: [
+                    { title: "Gentle Cleanser", desc: "Use pH-balanced cleanser." },
+                    { title: "Antioxidant Serum", desc: "Vitamin C for protection." },
+                    { title: "Lightweight Moisturizer", desc: "Maintain skin balance." },
+                    { title: "Sunscreen", desc: "Apply broad spectrum SPF 30+." }
+                ],
+                evening: [
+                    { title: "Cleanser", desc: "Remove daily buildup." },
+                    { title: "Treatments", desc: "Address specific concerns." },
+                    { title: "Moisturizer", desc: "Keep skin hydrated." },
+                    { title: "Eye Cream", desc: "Address under-eye area." }
+                ],
+                ingredients: ["Vitamin C", "Niacinamide", "Hyaluronic Acid", "Peptides"],
+                tips: ["Maintain a consistent routine", "Protect from sun exposure", "Stay hydrated", "Get adequate sleep"]
+            },
+            "Combination": {
+                morning: [
+                    { title: "Gentle Cleanser", desc: "Balance all skin areas." },
+                    { title: "Toner", desc: "Apply to T-zone only if needed." },
+                    { title: "Vitamin C Serum", desc: "Antioxidant protection." },
+                    { title: "Lightweight Moisturizer", desc: "Focus on dry areas." },
+                    { title: "Sunscreen", desc: "Apply SPF 30+." }
+                ],
+                evening: [
+                    { title: "Double Cleanse", desc: "Thoroughly remove impurities." },
+                    { title: "Exfoliate (2x/week)", desc: "Focus on T-zone." },
+                    { title: "Treatment Serum", desc: "Niacinamide for oil control." },
+                    { title: "Night Cream", desc: "Apply more to dry areas." }
+                ],
+                ingredients: ["Niacinamide", "Salicylic Acid", "Hyaluronic Acid", "Ceramides"],
+                tips: ["Use different products for different areas", "Blot T-zone throughout the day", "Exfoliate T-zone more often", "Moisturize cheeks more than T-zone"]
+            },
+            "Sensitive": {
+                morning: [
+                    { title: "Water Rinse", desc: "Just splash water if not dirty." },
+                    { title: "Soothing Serum", desc: "Use centella asiatica or aloe." },
+                    { title: "Gentle Moisturizer", desc: "Fragrance-free formula." },
+                    { title: "Mineral Sunscreen", desc: "Use physical SPF 30+." }
+                ],
+                evening: [
+                    { title: "Gentle Cleanser", desc: "Use micellar water or milky cleanser." },
+                    { title: "Soothing Treatment", desc: "Azelaic acid if tolerated." },
+                    { title: "Barrier Cream", desc: "Rich in ceramides." },
+                    { title: "Avoid Retinol", desc: "Unless prescribed by dermatologist." }
+                ],
+                ingredients: ["Ceramides", "Aloe Vera", "Centella Asiatica", "Oat Extract", "Squalane"],
+                tips: ["Patch test all new products", "Avoid fragrances and alcohol", "Keep skincare routine minimal", "Consult dermatologist for persistent issues"]
+            }
+        };
 
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const targetTab = btn.getAttribute('data-tab');
-               
-                tabBtns.forEach(b => b.classList.remove('active'));
-                tabPanels.forEach(p => p.classList.remove('active'));
-               
-                btn.classList.add('active');
-                document.getElementById(targetTab).classList.add('active');
-            });
-        });
-    </script>
+        const defaultRecommendations = {
+            morning: [
+                { title: "Gentle Cleanser", desc: "Use a mild, pH-balanced cleanser." },
+                { title: "Toner", desc: "Apply a hydrating toner." },
+                { title: "Serum", desc: "Use appropriate treatment serum." },
+                { title: "Moisturizer", desc: "Keep skin hydrated." },
+                { title: "Sunscreen", desc: "Apply SPF 30+ daily." }
+            ],
+            evening: [
+                { title: "Cleanser", desc: "Remove makeup and impurities." },
+                { title: "Toner", desc: "Balance skin pH." },
+                { title: "Treatment", desc: "Apply targeted treatments." },
+                { title: "Night Cream", desc: "Lock in moisture overnight." }
+            ],
+            ingredients: ["Vitamin C", "Hyaluronic Acid", "Niacinamide", "Ceramides"],
+            tips: ["Maintain a consistent skincare routine", "Stay hydrated", "Get adequate sleep", "Protect from sun exposure"]
+        };
 
-    <script>
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
+        function getRecordId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get("id");
         }
+
+        async function loadResult() {
+            const recordId = getRecordId();
+            if (!recordId) {
+                showError("No record ID provided");
+                return;
+            }
+            try {
+                const response = await fetch("http://127.0.0.1:8000/result/" + recordId);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch result");
+                }
+                const data = await response.json();
+                displayResult(data.record);
+            } catch (error) {
+                console.error("Error loading result:", error);
+                showError("Unable to load analysis results. Please try again.");
+            }
+        }
+
+        function displayResult(record) {
+            const timestamp = new Date(record.timestamp);
+            const formattedDate = timestamp.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+            const formattedTime = timestamp.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+
+            document.getElementById("timestamp").textContent = formattedDate + " at " + formattedTime;
+            document.getElementById("analysisDate").textContent = "Analysis performed on " + formattedDate;
+
+            const skinType = record.skin_type || "Normal";
+            document.getElementById("skinType").textContent = skinType;
+            document.getElementById("summarySkinType").textContent = skinType;
+
+            const acneCount = record.acne_count || 0;
+            document.getElementById("acneCount").textContent = acneCount;
+
+            let acneLevel = "Clear";
+            if (acneCount > 0 && acneCount <= 5) acneLevel = "Mild";
+            else if (acneCount > 5 && acneCount <= 15) acneLevel = "Moderate";
+            else if (acneCount > 15) acneLevel = "Severe";
+
+            document.getElementById("acneLevel").textContent = acneLevel;
+
+            const recommendations = skinTypeRecommendations[skinType] || defaultRecommendations;
+
+            const morningContainer = document.getElementById("morningRoutine");
+            morningContainer.innerHTML = recommendations.morning.map(function(step, index) {
+                return '<div class="routine-step"><div class="step-number">' + (index + 1) + '</div><div class="step-content"><h4>' + step.title + '</h4><p>' + step.desc + '</p></div></div>';
+            }).join("");
+
+            const eveningContainer = document.getElementById("eveningRoutine");
+            eveningContainer.innerHTML = recommendations.evening.map(function(step, index) {
+                return '<div class="routine-step"><div class="step-number">' + (index + 1) + '</div><div class="step-content"><h4>' + step.title + '</h4><p>' + step.desc + '</p></div></div>';
+            }).join("");
+
+            const tipsContainer = document.getElementById("tipsContent");
+            tipsContainer.innerHTML = "<ul>" + recommendations.tips.map(function(tip) {
+                return "<li>" + tip + "</li>";
+            }).join("") + "</ul>";
+
+            const ingredientsContainer = document.getElementById("keyIngredients");
+            ingredientsContainer.innerHTML = recommendations.ingredients.map(function(ing) {
+                return '<div class="ingredient-tag">' + ing + "</div>";
+            }).join("");
+
+            document.getElementById("loadingState").style.display = "none";
+            document.getElementById("resultsContent").style.display = "block";
+            setupTabs();
+        }
+
+        function showError(message) {
+            document.getElementById("loadingState").style.display = "none";
+            document.getElementById("errorState").style.display = "block";
+            document.getElementById("errorMessage").textContent = message;
+        }
+
+        function setupTabs() {
+            var tabBtns = document.querySelectorAll(".tab-btn");
+            var tabPanels = document.querySelectorAll(".routine-content");
+            tabBtns.forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var targetTab = btn.getAttribute("data-tab");
+                    tabBtns.forEach(function(b) { b.classList.remove("active"); });
+                    tabPanels.forEach(function(p) { p.classList.remove("active"); });
+                    btn.classList.add("active");
+                    document.getElementById(targetTab).classList.add("active");
+                });
+            });
+        }
+
+        if (localStorage.getItem("darkMode") === "true") {
+            document.body.classList.add("dark-mode");
+        }
+
+        document.addEventListener("DOMContentLoaded", loadResult);
     </script>
 </body>
 </html>

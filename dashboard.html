@@ -6,6 +6,7 @@
     <title>Dashboard - Lumina Care</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* Dashboard specific styles */
         .dashboard-page {
@@ -434,6 +435,17 @@
 
             <!-- Main Content -->
             <div class="dashboard-grid">
+                <!-- Acne Trend Chart -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Acne Trend Over Time</h3>
+                        <a href="history.html">View All</a>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="acneChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+
                 <!-- Recent Analyses -->
                 <div class="dashboard-card">
                     <div class="card-header">
@@ -576,10 +588,119 @@
     </footer>
 
     <script>
+        // Auth Guard - Protect authenticated pages
+        (function() {
+            var userId = localStorage.getItem('user_id');
+            if (!userId) {
+                alert('Please login to continue');
+                window.location.href = 'auth.html';
+                return;
+            }
+        })();
+
         // Dark Mode - Check and apply on page load
         if (localStorage.getItem('darkMode') === 'true') {
             document.body.classList.add('dark-mode');
         }
+
+        // Load history data and create acne trend chart
+        let acneChart = null;
+
+        async function loadAcneTrend() {
+            const user_id = localStorage.getItem('user_id');
+            
+            if (!user_id) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/history/${user_id}`);
+                const data = await response.json();
+                
+                if (data.history && data.history.length > 0) {
+                    createAcneChart(data.history);
+                } else {
+                    document.querySelector('#acneChart').parentElement.innerHTML = 
+                        '<div class="empty-state"><div class="empty-state-icon"><i class="fas fa-chart-line"></i></div><h4>No Data Yet</h4><p>Complete your first analysis to see your acne trend!</p></div>';
+                }
+            } catch (error) {
+                console.error('Error loading acne trend:', error);
+            }
+        }
+
+        function createAcneChart(records) {
+            const sortedRecords = [...records].sort((a, b) => 
+                new Date(a.timestamp) - new Date(b.timestamp)
+            );
+
+            const labels = sortedRecords.map(record => {
+                const date = new Date(record.timestamp);
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            });
+
+            const acneData = sortedRecords.map(record => record.acne_count || 0);
+
+            const ctx = document.getElementById('acneChart').getContext('2d');
+            
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(102, 126, 234, 0.3)');
+            gradient.addColorStop(1, 'rgba(102, 126, 234, 0.0)');
+
+            acneChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Acne Count',
+                        data: acneData,
+                        borderColor: '#667eea',
+                        backgroundColor: gradient,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#667eea',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `Acne Count: ${context.parsed.y}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#64748b' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: { color: '#64748b', stepSize: 1 }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', loadAcneTrend);
     </script>
 </body>
 </html>
