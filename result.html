@@ -49,6 +49,18 @@
         .additional-tips ul { list-style: none; padding: 0; }
         .additional-tips li { padding: 8px 0; padding-left: 24px; position: relative; color: var(--text-secondary); font-size: 14px; }
         .additional-tips li::before { content: '→'; position: absolute; left: 0; color: #667eea; }
+        
+        /* Product Cards */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+        .product-card { background: #f8fafc; border-radius: 12px; padding: 20px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+        .product-image { width: 100px; height: 100px; margin: 0 auto 16px; border-radius: 10px; object-fit: cover; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 36px; color: var(--text-secondary); }
+        .product-name { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary); }
+        .product-brand { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
+        .product-price { font-size: 18px; font-weight: 700; color: #667eea; margin-bottom: 16px; }
+        .btn-view-details { display: inline-block; padding: 10px 20px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.3s; }
+        .btn-view-details:hover { background: #5a6fd6; transform: translateY(-2px); }
+        
         .action-buttons { display: flex; gap: 16px; justify-content: center; margin-top: 40px; }
         .btn-primary, .btn-secondary { padding: 14px 28px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s; text-decoration: none; }
         .btn-primary { background: var(--primary-gradient); color: white; border: none; }
@@ -194,6 +206,12 @@
                         <div class="key-ingredients">
                             <h4>Key Ingredients to Look For:</h4>
                             <div class="ingredients-grid" id="keyIngredients"></div>
+                        </div>
+                        
+                        <!-- Recommended Products Section -->
+                        <div class="products-section" id="productsSection" style="margin-top: 32px;">
+                            <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Recommended Products:</h4>
+                            <div class="products-grid" id="productsGrid"></div>
                         </div>
                     </div>
                 </div>
@@ -436,9 +454,46 @@
                 return '<div class="ingredient-tag">' + ing + "</div>";
             }).join("");
 
+            // Display recommended products if available
+            const products = record.recommendations && record.recommendations.products ? record.recommendations.products : [];
+            if (products.length > 0) {
+                displayProducts(products);
+            } else {
+                document.getElementById("productsSection").style.display = "none";
+            }
+
             document.getElementById("loadingState").style.display = "none";
             document.getElementById("resultsContent").style.display = "block";
             setupTabs();
+        }
+
+        // Function to display product cards with View Details button
+        function displayProducts(products) {
+            const productsGrid = document.getElementById("productsGrid");
+            
+            productsGrid.innerHTML = products.map(function(product) {
+                // Use product image if available, otherwise use a default icon
+                const imageHtml = product.image 
+                    ? `<img src="${product.image}" alt="${product.name}" class="product-image">`
+                    : `<div class="product-image"><i class="fas fa-box"></i></div>`;
+                
+                // If product has a URL, make the button open in new tab
+                const buttonHtml = product.url 
+                    ? `<a href="${product.url}" target="_blank" rel="noopener noreferrer" class="btn-view-details">View Details</a>`
+                    : `<button class="btn-view-details" onclick="alert('Product details coming soon!')">View Details</button>`;
+                
+                return `
+                    <div class="product-card">
+                        ${imageHtml}
+                        <div class="product-name">${product.name || 'Product'}</div>
+                        <div class="product-brand">${product.brand || 'Brand'}</div>
+                        ${product.price ? `<div class="product-price">${product.price}</div>` : ''}
+                        ${buttonHtml}
+                    </div>
+                `;
+            }).join("");
+            
+            document.getElementById("productsSection").style.display = "block";
         }
 
         function showError(message) {

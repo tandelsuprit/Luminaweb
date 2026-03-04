@@ -828,6 +828,16 @@
     </footer>
 
     <script>
+        // Helper function to format ISO timestamp to readable format
+        function formatTimestamp(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+            });
+        }
+
         // Auth Guard - Protect authenticated pages
         (function() {
             var userId = localStorage.getItem('user_id');
@@ -873,12 +883,7 @@
             tbody.innerHTML = '';
 
             records.forEach(record => {
-                const date = new Date(record.timestamp);
-                const formattedDate = date.toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric' 
-                });
+                const formattedDate = formatTimestamp(record.timestamp);
                 
                 const skinType = record.skin_type || 'Unknown';
                 const acneCount = record.acne_count || 0;

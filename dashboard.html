@@ -588,6 +588,16 @@
     </footer>
 
     <script>
+        // Helper function to format ISO timestamp to readable format
+        function formatTimestamp(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+            });
+        }
+
         // Auth Guard - Protect authenticated pages
         (function() {
             var userId = localStorage.getItem('user_id');
@@ -636,9 +646,9 @@
                     // Update stats
                     updateStats(sortedRecords);
                 } else {
-                    // No data state
+                    // No data state - hide chart and show friendly message
                     document.querySelector('#acneChart').parentElement.innerHTML = 
-                        '<div class="empty-state"><div class="empty-state-icon"><i class="fas fa-chart-line"></i></div><h4>No Data Yet</h4><p>Complete your first analysis to see your acne trend!</p></div>';
+                        '<div class="empty-state"><div class="empty-state-icon"><i class="fas fa-chart-line"></i></div><h4>No scans yet!</h4><p>Complete your first analysis to see your progress chart.</p></div>';
                     
                     document.querySelector('.skin-type-display').innerHTML = 
                         '<div class="skin-type-icon"><i class="fas fa-question"></i></div><h4>No Analysis Yet</h4><p>Complete your first skin analysis to see your profile</p>';
