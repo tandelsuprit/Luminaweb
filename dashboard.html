@@ -606,7 +606,7 @@
         // Load history data and create acne trend chart
         let acneChart = null;
 
-        async function loadAcneTrend() {
+        async function loadDashboardData() {
             const user_id = localStorage.getItem('user_id');
             
             if (!user_id) {
@@ -619,17 +619,103 @@
                 const data = await response.json();
                 
                 if (data.history && data.history.length > 0) {
-                    createAcneChart(data.history);
+                    // Sort by timestamp (newest first)
+                    const sortedRecords = [...data.history].sort((a, b) => 
+                        new Date(b.timestamp) - new Date(a.timestamp)
+                    );
+                    
+                    // Get the most recent record
+                    const latestRecord = sortedRecords[0];
+                    
+                    // Update skin profile section with most recent skin type
+                    updateSkinProfile(latestRecord, sortedRecords);
+                    
+                    // Create acne trend chart
+                    createAcneChart(sortedRecords);
+                    
+                    // Update stats
+                    updateStats(sortedRecords);
                 } else {
+                    // No data state
                     document.querySelector('#acneChart').parentElement.innerHTML = 
                         '<div class="empty-state"><div class="empty-state-icon"><i class="fas fa-chart-line"></i></div><h4>No Data Yet</h4><p>Complete your first analysis to see your acne trend!</p></div>';
+                    
+                    document.querySelector('.skin-type-display').innerHTML = 
+                        '<div class="skin-type-icon"><i class="fas fa-question"></i></div><h4>No Analysis Yet</h4><p>Complete your first skin analysis to see your profile</p>';
                 }
             } catch (error) {
-                console.error('Error loading acne trend:', error);
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        function updateSkinProfile(latestRecord, allRecords) {
+            const skinType = latestRecord.skin_type || 'Unknown';
+            const acneCount = latestRecord.acne_count || 0;
+            
+            // Update skin type display
+            document.querySelector('.skin-type-display h4').textContent = skinType + ' Skin';
+            
+            // Update description based on skin type
+            let description = '';
+            if (skinType.toLowerCase().includes('oily')) {
+                description = 'Excess sebum production';
+            } else if (skinType.toLowerCase().includes('dry')) {
+                description = 'Lack of natural oils';
+            } else if (skinType.toLowerCase().includes('combination')) {
+                description = 'Oily T-Zone, Dry Cheeks';
+            } else if (skinType.toLowerCase().includes('sensitive')) {
+                description = 'Reactive and delicate';
+            } else if (skinType.toLowerCase().includes('normal')) {
+                description = 'Balanced and healthy';
+            } else {
+                description = 'Based on latest analysis';
+            }
+            document.querySelector('.skin-type-display p').textContent = description;
+            
+            // Update concerns based on acne count
+            const concernsContainer = document.querySelector('.skin-concerns');
+            concernsContainer.innerHTML = '';
+            
+            if (acneCount > 0) {
+                const acneTag = document.createElement('span');
+                acneTag.className = 'concern-tag active';
+                acneTag.textContent = `Acne (${acneCount})`;
+                concernsContainer.appendChild(acneTag);
+            }
+            
+            if (acneCount <= 5) {
+                const clearTag = document.createElement('span');
+                clearTag.className = 'concern-tag';
+                clearTag.textContent = 'Clear';
+                concernsContainer.appendChild(clearTag);
+            }
+        }
+
+        function updateStats(records) {
+            // Total analyses
+            document.querySelector('.stat-card:nth-child(1) .stat-info h3').textContent = records.length;
+            
+            // Calculate improvement (compare first and last analysis)
+            if (records.length >= 2) {
+                const oldestAcne = records[records.length - 1].acne_count || 0;
+                const newestAcne = records[0].acne_count || 0;
+                const improvement = oldestAcne - newestAcne;
+                
+                if (improvement > 0) {
+                    document.querySelector('.stat-card:nth-child(2) .stat-info h3').textContent = `+${improvement}`;
+                    document.querySelector('.stat-card:nth-child(2) .stat-info p').textContent = 'Acne Reduced';
+                } else if (improvement < 0) {
+                    document.querySelector('.stat-card:nth-child(2) .stat-info h3').textContent = `${improvement}`;
+                    document.querySelector('.stat-card:nth-child(2) .stat-info p').textContent = 'Acne Increased';
+                } else {
+                    document.querySelector('.stat-card:nth-child(2) .stat-info h3').textContent = '0';
+                    document.querySelector('.stat-card:nth-child(2) .stat-info p').textContent = 'No Change';
+                }
             }
         }
 
         function createAcneChart(records) {
+            // Sort by timestamp (oldest to newest for chart)
             const sortedRecords = [...records].sort((a, b) => 
                 new Date(a.timestamp) - new Date(b.timestamp)
             );
@@ -700,7 +786,13 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', loadAcneTrend);
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
+
+        // Logout function - clears localStorage and redirects to auth.html
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'auth.html';
+        }
     </script>
 </body>
 </html>

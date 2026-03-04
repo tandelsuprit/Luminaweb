@@ -493,7 +493,7 @@
                             <i class="fas fa-database"></i>
                             Data
                         </button>
-                        <button class="settings-nav-item" style="margin-top: auto; color: var(--error);">
+                        <button class="settings-nav-item" style="margin-top: auto; color: var(--error);" onclick="logout()">
                             <i class="fas fa-right-from-bracket"></i>
                             Sign Out
                         </button>
@@ -858,6 +858,12 @@
                 alert('Settings saved successfully!');
             });
         });
+
+        // Logout function - clears localStorage and redirects to auth.html
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'auth.html';
+        }
     </script>
 </body>
 </html>
