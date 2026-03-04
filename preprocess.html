@@ -792,11 +792,14 @@
                     throw new Error('Analysis failed');
                 }
                 
+                // Get the JSON response from backend
                 const data = await response.json();
-                const inserted_id = data.inserted_id;
                 
-                // Redirect to result page with the record ID
-                window.location.href = `result.html?id=${inserted_id}`;
+                // Save the result to localStorage
+                localStorage.setItem('last_result', JSON.stringify(data));
+                
+                // Redirect to result page
+                window.location.href = 'result.html';
                 
             } catch (error) {
                 console.error('Error processing image:', error);
