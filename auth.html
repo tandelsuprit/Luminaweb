@@ -231,100 +231,117 @@
     </main>
 
     <script>
-        function showSignIn() {
-            document.getElementById('signInForm').style.display = 'block';
-            document.getElementById('signUpForm').style.display = 'none';
-        }
+        // --- KEEP these UI functions as they are ---
+function showSignIn() {
+    document.getElementById('signInForm').style.display = 'block';
+    document.getElementById('signUpForm').style.display = 'none';
+}
 
-        function showSignUp() {
-            document.getElementById('signInForm').style.display = 'none';
-            document.getElementById('signUpForm').style.display = 'block';
-        }
+function showSignUp() {
+    document.getElementById('signInForm').style.display = 'none';
+    document.getElementById('signUpForm').style.display = 'block';
+}
 
-        function handleSignIn() {
-            const email = document.getElementById('signInEmail').value.trim();
-            const password = document.getElementById('signInPassword').value.trim();
+function showToast(message, type) {
+    const existing = document.querySelector('.toast');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-' + type;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('toast-show'), 10);
+    setTimeout(() => {
+        toast.classList.remove('toast-show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
 
-            if (!email || !password) {
-                showToast('⚠️ Please enter your email and password.', 'warning');
-                return;
-            }
+// --- REPLACE handleSignIn with this REAL database call ---
+async function handleSignIn() {
+    const username = document.getElementById('signInEmail').value.trim(); // Your backend uses username/email
+    const password = document.getElementById('signInPassword').value.trim();
 
-            const btn = document.getElementById('signInBtn');
-            btn.innerHTML = '<span class="spinner"></span> Signing In...';
-            btn.disabled = true;
+    if (!username || !password) {
+        showToast('⚠️ Please enter your credentials.', 'warning');
+        return;
+    }
 
-            setTimeout(() => {
-                showToast('✅ Sign In Successful! Redirecting...', 'success');
-setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-            }, 1500);
-        }
+    const btn = document.getElementById('signInBtn');
+    btn.innerHTML = '<span class="spinner"></span> Signing In...';
+    btn.disabled = true;
 
-        function handleSignUp() {
-            const name = document.getElementById('signUpName').value.trim();
-            const email = document.getElementById('signUpEmail').value.trim();
-            const password = document.getElementById('signUpPassword').value.trim();
-            const confirm = document.getElementById('signUpConfirm').value.trim();
-            const agreed = document.getElementById('agreeTerms').checked;
-
-            if (!name || !email || !password || !confirm) {
-                showToast('⚠️ Please fill in all fields.', 'warning');
-                return;
-            }
-
-            if (password.length < 8) {
-                showToast('⚠️ Password must be at least 8 characters.', 'warning');
-                return;
-            }
-
-            if (password !== confirm) {
-                showToast('❌ Passwords do not match!', 'error');
-                return;
-            }
-
-            if (!agreed) {
-                showToast('⚠️ Please agree to the Terms & Conditions.', 'warning');
-                return;
-            }
-
-showToast('✅ Account Created! Redirecting...', 'success');
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1500);
-        }
-
-        function handleGoogleSignIn() {
-            showToast('⚠️ Google Sign-In requires backend integration.', 'warning');
-        }
-
-        function showToast(message, type) {
-            const existing = document.querySelector('.toast');
-            if (existing) existing.remove();
-
-            const toast = document.createElement('div');
-            toast.className = 'toast toast-' + type;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-
-            setTimeout(() => toast.classList.add('toast-show'), 10);
-            setTimeout(() => {
-                toast.classList.remove('toast-show');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const signInVisible = document.getElementById('signInForm').style.display !== 'none';
-                if (signInVisible) {
-                    handleSignIn();
-                } else {
-                    handleSignUp();
-                }
-            }
+    try {
+        const response = await fetch('http://127.0.0.1:8000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: username, password: password })
         });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // SUCCESS: Save user session to browser
+            localStorage.setItem('user_id', data.user_id); 
+            localStorage.setItem('username', username);
+
+            showToast('✅ Sign In Successful! Redirecting...', 'success');
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+        } else {
+            showToast('❌ ' + (data.error || 'Invalid credentials'), 'error');
+            btn.innerHTML = 'Sign In';
+            btn.disabled = false;
+        }
+    } catch (error) {
+        showToast('❌ Backend Server is not running!', 'error');
+        btn.innerHTML = 'Sign In';
+        btn.disabled = false;
+    }
+}
+
+// --- REPLACE handleSignUp with this REAL database call ---
+async function handleSignUp() {
+    const name = document.getElementById('signUpName').value.trim();
+    const email = document.getElementById('signUpEmail').value.trim();
+    const password = document.getElementById('signUpPassword').value.trim();
+    const confirm = document.getElementById('signUpConfirm').value.trim();
+    const agreed = document.getElementById('agreeTerms').checked;
+
+    if (!name || !email || !password || !confirm) {
+        showToast('⚠️ Please fill in all fields.', 'warning');
+        return;
+    }
+    if (password !== confirm) {
+        showToast('❌ Passwords do not match!', 'error');
+        return;
+    }
+    if (!agreed) {
+        showToast('⚠️ Please agree to the Terms & Conditions.', 'warning');
+        return;
+    }
+
+    try {
+        const response = await fetch('http://127.0.0.1:8000/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                username: name, 
+                email: email, 
+                password: password 
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showToast('✅ Account Created! Please Sign In.', 'success');
+            showSignIn(); // Switch to login form
+        } else {
+            showToast('❌ ' + (data.message || 'Registration failed'), 'error');
+        }
+    } catch (error) {
+        showToast('❌ Backend Server connection failed!', 'error');
+    }
+}
     </script>
 </body>
 </html>
