@@ -334,12 +334,46 @@
             tips: ["Maintain a consistent skincare routine", "Stay hydrated", "Get adequate sleep", "Protect from sun exposure"]
         };
 
+        function loadResultFromLocalStorage() {
+            // Try to get result from localStorage first
+            const lastResult = localStorage.getItem('last_result');
+            
+            if (!lastResult) {
+                // No result found, redirect to home page
+                window.location.href = 'home.html';
+                return;
+            }
+            
+            try {
+                const data = JSON.parse(lastResult);
+                displayResult(data);
+            } catch (error) {
+                console.error('Error parsing last_result:', error);
+                window.location.href = 'home.html';
+            }
+        }
+
+        // Keep the old function for backward compatibility but use localStorage primarily
         function getRecordId() {
             const params = new URLSearchParams(window.location.search);
             return params.get("id");
         }
 
         async function loadResult() {
+            // First try to load from localStorage
+            const lastResult = localStorage.getItem('last_result');
+            
+            if (lastResult) {
+                try {
+                    const data = JSON.parse(lastResult);
+                    displayResult(data);
+                    return;
+                } catch (error) {
+                    console.error('Error parsing localStorage result:', error);
+                }
+            }
+            
+            // Fallback: Try to load from URL parameter (backward compatibility)
             const recordId = getRecordId();
             if (!recordId) {
                 showError("No record ID provided");
@@ -431,7 +465,7 @@
             document.body.classList.add("dark-mode");
         }
 
-        document.addEventListener("DOMContentLoaded", loadResult);
+        document.addEventListener("DOMContentLoaded", loadResultFromLocalStorage);
     </script>
 </body>
 </html>
