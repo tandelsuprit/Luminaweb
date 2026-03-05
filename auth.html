@@ -475,42 +475,35 @@ window.onclick = function(event) {
 const GOOGLE_CLIENT_ID = "910103075939-esme57500o5vn66bvlapq8nr2n6s2ote.apps.googleusercontent.com";
 
 async function handleGoogleSignIn() {
+    // Show loading toast
+    showToast('Connecting to Google...', 'info');
+    
     // Initialize the Google Identity Services token client
     const client = google.accounts.oauth2.initTokenClient({
         client_id: GOOGLE_CLIENT_ID,
-        scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+        scope: 'email profile openid',
+        ux_mode: 'popup',
         callback: async (response) => {
             if (response.error !== undefined) {
                 showToast('❌ Google Sign-In failed: ' + response.error, 'error');
+                console.error('Google OAuth Error:', response.error);
                 return;
             }
             
-            // Get the access token
-            const accessToken = response.access_token;
+            console.log('Got access token:', response.access_token);
             
-            // Fetch user info from Google
+            // Send the access token to your backend for verification
             try {
-                const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                    headers: {
-                        'Authorization': 'Bearer ' + accessToken
-                    }
-                });
-                
-                const userInfo = await userInfoResponse.json();
-                
-                // Send the ID token to your backend for verification
-                // Note: For full ID token verification, you'd use the id_token from the response
-                // Here we're using the access token to get user info and create a custom flow
                 const backendResponse = await fetch('http://127.0.0.1:8000/auth/google', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        credential: response.credential || accessToken,
-                        access_token: accessToken
+                        access_token: response.access_token
                     })
                 });
                 
                 const data = await backendResponse.json();
+                console.log('Backend response:', data);
                 
                 if (backendResponse.ok && data.success) {
                     // Save user session to browser
@@ -525,8 +518,8 @@ async function handleGoogleSignIn() {
                 }
                 
             } catch (error) {
-                showToast('❌ Failed to get user info from Google', 'error');
-                console.error('Google Sign-In error:', error);
+                showToast('❌ Failed to connect to backend', 'error');
+                console.error('Backend error:', error);
             }
         }
     });
