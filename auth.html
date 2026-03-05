@@ -6,6 +6,10 @@
     <title>Sign In - Lumina Care</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Identity Services - Required for Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
     <style>
         /* Password input with toggle */
         .password-input-wrapper {
@@ -464,6 +468,71 @@ window.onclick = function(event) {
     if (event.target === modal) {
         closeForgotPasswordModal();
     }
+}
+
+// --- Google Sign-In Function ---
+// Your Google OAuth Client ID
+const GOOGLE_CLIENT_ID = "910103075939-esme57500o5vn66bvlapq8nr2n6s2ote.apps.googleusercontent.com";
+
+async function handleGoogleSignIn() {
+    // Initialize the Google Identity Services token client
+    const client = google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+        callback: async (response) => {
+            if (response.error !== undefined) {
+                showToast('❌ Google Sign-In failed: ' + response.error, 'error');
+                return;
+            }
+            
+            // Get the access token
+            const accessToken = response.access_token;
+            
+            // Fetch user info from Google
+            try {
+                const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken
+                    }
+                });
+                
+                const userInfo = await userInfoResponse.json();
+                
+                // Send the ID token to your backend for verification
+                // Note: For full ID token verification, you'd use the id_token from the response
+                // Here we're using the access token to get user info and create a custom flow
+                const backendResponse = await fetch('http://127.0.0.1:8000/auth/google', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        credential: response.credential || accessToken,
+                        access_token: accessToken
+                    })
+                });
+                
+                const data = await backendResponse.json();
+                
+                if (backendResponse.ok && data.success) {
+                    // Save user session to browser
+                    localStorage.setItem('user_id', data.user_id);
+                    localStorage.setItem('username', data.username);
+                    localStorage.setItem('email', data.email);
+                    
+                    showToast('✅ ' + data.message + ' Redirecting...', 'success');
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+                } else {
+                    showToast('❌ ' + (data.detail || 'Authentication failed'), 'error');
+                }
+                
+            } catch (error) {
+                showToast('❌ Failed to get user info from Google', 'error');
+                console.error('Google Sign-In error:', error);
+            }
+        }
+    });
+    
+    // Trigger the Google Sign-In flow
+    client.requestAccessToken();
 }
     </script>
 </body>

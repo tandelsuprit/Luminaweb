@@ -1,28 +1,24 @@
-# Lumina Care - Frontend Enhancement Plan
+# Google Sign-In Implementation
 
-## Objective
-Enhance existing pages and create new components to match the 7-step methodology:
-1. Facial Image Input - ✅ Existing
-2. Image Preprocessing - ❌ Needs new page
-3. Face Analysis (CNN) - Backend ready
-4. Recommendation Engine - Backend in progress
-5. User Profiles - ⚠️ Needs dashboard
-6. Progress Tracking - ❌ Needs history page
-7. Final Output - ✅ Existing
+## Tasks
+- [x] 1. Analyze existing project structure (auth.html, main.py, database.py)
+- [x] 2. Update auth.html - Add Google Identity Services script and implement handleGoogleSignIn()
+- [x] 3. Update main.py - Add /auth/google endpoint with ID token verification
+- [ ] 4. Test the implementation
 
-## Completed Tasks ✅
+## Google OAuth Client ID
+910103075939-esme57500o5vn66bvlapq8nr2n6s2ote.apps.googleusercontent.com
 
-### New Pages Created:
-- [x] dashboard.html - User profile management
-- [x] history.html - Progress tracking with charts
-- [x] settings.html - User preferences
-- [x] preprocess.html - Image crop/normalize interface
+## To Test
+1. Make sure you have installed the required packages:
+   pip install google-auth requests httpx
 
-### Existing Pages to Update:
-- [ ] home.html - Add navigation to new pages
-- [ ] auth.html - Add redirect to dashboard after login
-- [ ] All pages - Update navbar with new links
+2. Start the backend server:
+   python -m uvicorn backend.main:app --reload
 
-## Remaining Tasks:
-1. Update navbar in home.html, index.html, auth.html, result.html, chat.html
-2. Link home.html upload to preprocess.html
+3. Open auth.html in your browser and click "Continue with Google"
+
+4. Complete Google Sign-In flow
+
+5. On success, you'll be redirected to dashboard.html
+
